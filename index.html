@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>BBP VAULT | v1.0-Final</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root { 
+            --accent: #6366f1; 
+            --bg: #020617; 
+            --spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --soft: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: var(--bg);
+            color: #f8fafc;
+            -webkit-tap-highlight-color: transparent;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* Gelişmiş Glassmorphism */
+        .glass { 
+            background: rgba(15, 23, 42, 0.7); 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        
+        .accent-bg { background-color: var(--accent); }
+        .accent-text { color: var(--accent); }
+        
+        /* Buton Etkileşimleri */
+        .btn-bounce { transition: transform 0.4s var(--spring), background 0.3s ease; }
+        .btn-bounce:active { transform: scale(0.85); }
+        .btn-bounce:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -10px rgba(99, 102, 241, 0.5); }
+
+        .nav-item { transition: all 0.4s var(--spring); position: relative; }
+        .nav-item.active { color: var(--accent); transform: translateY(-5px) scale(1.1); }
+        .nav-item::after {
+            content: ''; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%) scale(0);
+            width: 4px; height: 4px; background: var(--accent); border-radius: 50%;
+            transition: transform 0.3s var(--spring);
+        }
+        .nav-item.active::after { transform: translateX(-50%) scale(1); }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        
+        /* Grid Kart Animasyonları */
+        .media-card { 
+            aspect-ratio: 1/1; 
+            border-radius: 1.5rem; 
+            overflow: hidden; 
+            position: relative; 
+            border: 2px solid transparent; 
+            background: #0f172a; 
+            transform-origin: center;
+            transition: border-color 0.3s ease;
+            opacity: 0;
+            animation: popIn 0.6s var(--spring) forwards;
+        }
+        .media-card:active { transform: scale(0.95); }
+        .media-card.selected { border-color: var(--accent); transform: scale(0.95); }
+
+        .note-card { 
+            border-radius: 1.5rem; padding: 1.25rem; position: relative; overflow: hidden; height: 160px; display: flex; flex-direction: column;
+            opacity: 0;
+            animation: slideInRight 0.5s var(--soft) forwards;
+            transition: transform 0.3s var(--spring);
+        }
+        .note-card:active { transform: scale(0.96); }
+
+        /* Keyframes */
+        @keyframes popIn { 
+            from { opacity: 0; transform: scale(0.5) translateY(20px); } 
+            to { opacity: 1; transform: scale(1) translateY(0); } 
+        }
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeScaleUp {
+            from { opacity: 0; transform: scale(0.9) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .modal-enter { animation: fadeScaleUp 0.4s var(--spring) forwards; }
+        
+        .modern-input {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 1.25rem;
+            padding: 1rem 1.25rem;
+            width: 100%;
+            outline: none;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s var(--soft);
+        }
+        .modern-input:focus { 
+            border-color: var(--accent); 
+            background: rgba(15, 23, 42, 0.9); 
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            transform: scale(1.01);
+        }
+
+        #galleryGrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+            gap: 12px;
+            padding-bottom: 120px;
+        }
+        #notesGrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px;
+            padding-bottom: 120px;
+        }
+    </style>
+</head>
+<body class="safe-area-inset">
+
+    <div id="authScreen" class="fixed inset-0 z-[500] bg-slate-950 flex flex-col items-center justify-center p-8 transition-transform duration-700 cubic-bezier(0.7, 0, 0.3, 1)">
+        <div class="w-full max-sm text-center">
+            <div class="mb-8 inline-flex p-6 rounded-[3rem] bg-indigo-500/10 border border-indigo-500/20 shadow-2xl animate-pulse relative group">
+                <div class="absolute inset-0 bg-indigo-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <i data-lucide="shield-check" class="w-16 h-16 text-indigo-400 relative z-10 transition-transform duration-500 group-hover:scale-110"></i>
+            </div>
+            <h1 id="authTitle" class="text-4xl font-black mb-2 italic tracking-tighter uppercase transition-all">Vault <span class="accent-text text-2xl">v2.1</span></h1>
+            <p id="authSubtitle" class="text-slate-500 text-[10px] mb-12 uppercase tracking-[0.4em] font-bold opacity-70">Güvenli Erişim Sistemi</p>
+            
+            <div class="space-y-4 max-w-xs mx-auto perspective-1000">
+                <div class="relative group">
+                    <input type="password" id="authInput" class="w-full bg-slate-900 border border-slate-800 p-6 rounded-[2rem] text-center text-xl focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/20 outline-none transition-all duration-300 placeholder:text-slate-700 font-bold tracking-widest shadow-inner" placeholder="••••">
+                    <button onclick="togglePassView()" class="absolute right-6 top-1/2 -translate-y-1/2 text-slate-600 hover:text-indigo-400 transition-colors btn-bounce"><i data-lucide="eye" class="w-5 h-5"></i></button>
+                </div>
+                <button onclick="handleAuth()" class="w-full accent-bg py-5 rounded-[2rem] font-black text-lg shadow-xl shadow-indigo-500/20 btn-bounce text-white tracking-widest relative overflow-hidden">
+                    <span class="relative z-10">GİRİŞ YAP</span>
+                    <div class="absolute inset-0 bg-white/20 translate-y-full hover:translate-y-0 transition-transform duration-300"></div>
+                </button>
+            </div>
+            <div id="authError" class="mt-6 text-red-400 font-bold text-xs h-4 uppercase tracking-widest transition-all"></div>
+        </div>
+    </div>
+
+    <div id="app" class="hidden flex flex-col h-full opacity-0 transition-opacity duration-700 ease-in">
+        <header class="p-4 pt-6 bg-slate-950/80 backdrop-blur-xl z-40 border-b border-white/5 sticky top-0 transition-all duration-300">
+            <div class="flex items-center justify-between mb-5">
+                <div class="flex items-center gap-3 group">
+                    <div class="w-10 h-10 accent-bg rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/30 transition-transform duration-500 group-hover:rotate-12">
+                        <i data-lucide="ghost" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-black text-xl italic leading-none uppercase tracking-tight">Gizli Kasa</h2>
+                        <span id="storageInfo" class="text-[9px] text-slate-500 font-bold uppercase tracking-widest transition-colors group-hover:text-indigo-400">HESAPLANIYOR...</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="openInfoModal()" class="p-3 rounded-2xl bg-slate-900 border border-slate-800 btn-bounce text-indigo-400 hover:bg-slate-800 transition-colors"><i data-lucide="info" class="w-5 h-5"></i></button>
+                    <button id="multiSelectBtn" onclick="toggleSelectMode()" class="px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-[10px] font-black tracking-widest btn-bounce hover:bg-slate-800 transition-colors">SEÇ</button>
+                    <button onclick="openSettings()" class="p-3 rounded-2xl bg-slate-900 border border-slate-800 btn-bounce text-slate-400 hover:text-white"><i data-lucide="settings-2" class="w-5 h-5"></i></button>
+                </div>
+            </div>
+
+            <div id="searchContainer" class="space-y-4">
+                <div class="relative group">
+                    <i data-lucide="search" class="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-indigo-400 transition-colors duration-300"></i>
+                    <input type="text" id="searchBar" oninput="handleSearch()" class="modern-input pl-12" placeholder="Kasa içinde ara...">
+                </div>
+                <div id="tagBar" class="flex gap-2 overflow-x-auto no-scrollbar pb-1 mask-linear-gradient"></div>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto px-4 py-6 relative no-scrollbar bg-gradient-to-b from-slate-950 to-[#050b1e]">
+            <div id="uploadStatus" class="hidden mb-6 p-6 glass rounded-[2.5rem] border-indigo-500/20 modal-enter">
+                <div class="flex justify-between items-center mb-3">
+                    <span class="text-[10px] font-black uppercase tracking-[0.2em] accent-text flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-indigo-500 animate-ping"></span> Dosyalar İşleniyor...
+                    </span>
+                    <span id="progVal" class="text-xs font-bold text-white">0%</span>
+                </div>
+                <div class="h-2 w-full bg-slate-800 rounded-full overflow-hidden p-[2px]">
+                    <div id="progBar" class="h-full accent-bg rounded-full transition-all duration-300 ease-out shadow-[0_0_10px_rgba(99,102,241,0.5)]" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div id="galleryView" class="transition-all duration-500">
+                <div id="galleryGrid"></div>
+            </div>
+
+            <div id="notesView" class="hidden transition-all duration-500">
+                 <button onclick="openNoteEditor()" class="w-full py-5 mb-6 rounded-2xl border border-dashed border-slate-700 text-slate-500 font-bold text-sm hover:bg-slate-900/50 hover:border-indigo-500 hover:text-indigo-400 transition-all duration-300 flex items-center justify-center gap-2 uppercase tracking-tighter group btn-bounce">
+                    <div class="p-2 bg-slate-800 rounded-full group-hover:bg-indigo-500/20 transition-colors"><i data-lucide="plus" class="w-4 h-4"></i></div> Yeni Gizli Not
+                 </button>
+                <div id="notesGrid"></div>
+            </div>
+
+            <div id="emptyState" class="hidden flex flex-col items-center justify-center py-20 opacity-40 text-center select-none animate-pulse">
+                <div class="relative mb-6">
+                    <div class="absolute inset-0 bg-indigo-500/20 blur-2xl rounded-full"></div>
+                    <i data-lucide="wind" class="w-20 h-20 relative z-10 text-slate-400"></i>
+                </div>
+                <p class="font-black text-sm uppercase tracking-widest text-slate-500">Burası şimdilik boş</p>
+            </div>
+        </main>
+
+        <div id="bulkBar" class="fixed bottom-28 left-4 right-4 glass rounded-[2.5rem] p-4 flex justify-between items-center hidden z-50 transform translate-y-20 transition-transform duration-500 var(--spring)">
+            <span id="bulkCount" class="pl-4 font-black text-xs uppercase tracking-widest text-indigo-400 flex items-center gap-2">
+                <i data-lucide="check-circle-2" class="w-4 h-4"></i> <span>0 Seçildi</span>
+            </span>
+            <button onclick="deleteSelected()" class="bg-red-500 text-white px-6 py-3 rounded-2xl font-black text-[10px] uppercase shadow-lg shadow-red-500/30 btn-bounce flex items-center gap-2">
+                <i data-lucide="trash" class="w-3 h-3"></i> Sil
+            </button>
+        </div>
+
+        <nav class="fixed bottom-0 left-0 right-0 glass border-t border-white/5 p-4 pb-8 flex justify-around items-center z-[100] rounded-t-[2.5rem]">
+            <button onclick="setTab('all')" class="nav-item active p-2" id="nav-all"><i data-lucide="image" class="w-6 h-6"></i></button>
+            <button onclick="setTab('notes')" class="nav-item text-slate-500 p-2" id="nav-notes"><i data-lucide="notebook-pen" class="w-6 h-6"></i></button>
+            
+            <div class="relative -top-8 group">
+                <div class="absolute inset-0 bg-indigo-500 blur-xl opacity-40 group-hover:opacity-60 transition-opacity duration-500 rounded-full"></div>
+                <button onclick="triggerMainAction()" class="relative accent-bg p-5 rounded-[2rem] shadow-2xl shadow-indigo-500/50 border-[6px] border-[#020617] active:scale-90 transition-transform duration-300 var(--spring) group-hover:rotate-90">
+                    <i data-lucide="plus" class="w-8 h-8 text-white"></i>
+                </button>
+            </div>
+
+            <button onclick="setTab('fav')" class="nav-item text-slate-500 p-2" id="nav-fav"><i data-lucide="heart" class="w-6 h-6"></i></button>
+            <button onclick="lockVault()" class="nav-item text-slate-500 p-2 hover:text-red-400"><i data-lucide="lock" class="w-6 h-6"></i></button>
+        </nav>
+    </div>
+
+    <input type="file" id="fileInp" multiple class="hidden" onchange="handleUpload(event)">
+
+    <div id="viewer" class="fixed inset-0 z-[600] hidden bg-black flex flex-col transition-opacity duration-300 opacity-0">
+        <div class="p-6 flex justify-between items-center absolute top-0 left-0 right-0 z-[610] bg-gradient-to-b from-black/90 to-transparent">
+            <button onclick="closeViewer()" class="p-3 bg-white/10 rounded-full backdrop-blur-md btn-bounce hover:bg-white/20 text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <div class="flex gap-3">
+                <button onclick="openEditInfoModal()" class="p-3 bg-white/10 text-white rounded-full backdrop-blur-md btn-bounce hover:bg-indigo-500 hover:text-white transition-colors"><i data-lucide="pencil" class="w-5 h-5"></i></button>
+                <button onclick="downloadCurrent()" class="p-3 bg-indigo-500/20 text-indigo-400 rounded-full backdrop-blur-md btn-bounce hover:bg-indigo-500 hover:text-white transition-colors"><i data-lucide="download" class="w-5 h-5"></i></button>
+                <button onclick="toggleFavCurrent()" id="vFav" class="p-3 bg-white/10 rounded-full backdrop-blur-md btn-bounce"></button>
+                <button onclick="deleteSingle()" class="p-3 bg-red-500/20 text-red-500 rounded-full backdrop-blur-md btn-bounce hover:bg-red-500 hover:text-white transition-colors"><i data-lucide="trash-2" class="w-5 h-5"></i></button>
+            </div>
+        </div>
+        
+        <div id="vContent" class="flex-1 flex items-center justify-center p-2 h-full w-full perspective-1000 transition-transform duration-500">
+            </div>
+
+        <div class="p-8 pb-12 bg-gradient-to-t from-black via-black/80 to-transparent absolute bottom-0 left-0 right-0 text-center transform translate-y-0 transition-transform">
+            <h3 id="vName" class="text-2xl font-black truncate italic uppercase tracking-tighter text-white drop-shadow-lg">Dosya Adı</h3>
+            <div class="flex justify-center gap-4 mt-3">
+                <span id="vTag" class="text-[10px] accent-bg text-white px-4 py-1.5 rounded-full font-black uppercase tracking-widest shadow-lg shadow-indigo-500/20">#GENEL</span>
+                <span id="vDate" class="text-[10px] bg-white/10 text-slate-300 px-4 py-1.5 rounded-full font-black tracking-widest backdrop-blur-sm border border-white/5"></span>
+            </div>
+        </div>
+    </div>
+
+    <div id="editInfoModal" class="fixed inset-0 z-[800] hidden flex items-center justify-center bg-black/80 backdrop-blur-md p-4 opacity-0 transition-opacity duration-300">
+        <div class="glass w-full max-w-sm rounded-[2.5rem] p-8 transform scale-90 transition-all duration-400 var(--spring)">
+            <div class="flex flex-col items-center text-center mb-8">
+                <div class="w-16 h-16 accent-bg rounded-3xl flex items-center justify-center mb-4 shadow-xl shadow-indigo-500/40 animate-bounce">
+                    <i data-lucide="pencil-line" class="text-white w-8 h-8"></i>
+                </div>
+                <h2 class="text-xl font-black italic uppercase tracking-tighter text-white">Dosya Bilgisi</h2>
+            </div>
+            <div class="space-y-4">
+                <div class="group">
+                    <label class="text-[10px] text-slate-500 font-bold uppercase tracking-widest ml-4 mb-1 block">Dosya Adı</label>
+                    <input type="text" id="editFileName" class="modern-input" placeholder="Dosya adı...">
+                </div>
+                <div class="group">
+                    <label class="text-[10px] text-slate-500 font-bold uppercase tracking-widest ml-4 mb-1 block">Etiket</label>
+                    <input type="text" id="editFileTag" class="modern-input" placeholder="Kategori (örn: özel)">
+                </div>
+            </div>
+            <div class="flex gap-3 mt-8">
+                <button onclick="closeEditInfoModal()" class="flex-1 py-4 rounded-2xl bg-slate-800 text-slate-400 font-black text-xs uppercase btn-bounce hover:bg-slate-700 hover:text-white">İPTAL</button>
+                <button onclick="saveFileInfoChanges()" class="flex-2 px-8 py-4 rounded-2xl accent-bg text-white font-black text-xs uppercase shadow-lg shadow-indigo-500/30 btn-bounce">GÜNCELLE</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="infoModal" class="fixed inset-0 z-[850] hidden flex items-center justify-center bg-black/90 backdrop-blur-xl p-6 opacity-0 transition-opacity duration-300">
+        <div class="glass w-full max-w-sm rounded-[3rem] p-8 transform scale-90 transition-all duration-500 var(--spring) text-center relative overflow-hidden group">
+            <div class="absolute inset-0 bg-gradient-to-tr from-indigo-500/10 to-transparent opacity-50"></div>
+            <button onclick="closeInfoModal()" class="absolute top-6 right-6 text-slate-500 hover:text-white transition-colors btn-bounce"><i data-lucide="x" class="w-6 h-6"></i></button>
+            
+            <div class="mb-6 inline-flex p-5 rounded-3xl bg-indigo-500/10 border border-indigo-500/20 shadow-[0_0_30px_rgba(99,102,241,0.2)] animate-pulse">
+                <i data-lucide="award" class="w-10 h-10 text-indigo-400"></i>
+            </div>
+            <h2 class="text-2xl font-black italic accent-text tracking-tighter uppercase mb-1 relative z-10">VAULT PRO</h2>
+            <p class="text-[10px] text-slate-500 font-bold tracking-[0.3em] mb-8 uppercase">v2.1-Stable Edition</p>
+            
+            <div class="space-y-6 relative z-10">
+                <div class="bg-white/5 p-4 rounded-2xl border border-white/5 hover:bg-white/10 transition-colors">
+                    <p class="text-[9px] text-slate-500 font-black uppercase tracking-widest mb-2">Geliştiriciler</p>
+                    <div class="text-lg font-black italic text-white flex flex-col gap-1">
+                        <span class="bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">bay4lly</span>
+                        <span class="text-indigo-500 text-xs">&</span>
+                        <span class="bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">Ünal</span>
+                    </div>
+                </div>
+                
+                <div class="h-[1px] bg-white/5 w-1/2 mx-auto"></div>
+                
+                <div>
+                    <p class="text-[9px] text-slate-600 font-black uppercase tracking-widest mb-2">Kurum</p>
+                    <p class="font-bold text-slate-300 text-sm tracking-wide">Osmangazi Anadolu Lisesi</p>
+                </div>
+                
+                <a href="https://youtube.com/@bay4lly" target="_blank" class="inline-flex items-center gap-2 bg-red-600/10 text-red-500 px-6 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest border border-red-500/20 hover:bg-red-600 hover:text-white hover:scale-105 transition-all duration-300 shadow-lg shadow-red-600/10 btn-bounce">
+                    <i data-lucide="youtube" class="w-4 h-4"></i> YouTube Kanalı
+                </a>
+            </div>
+            <p class="mt-10 text-[8px] text-slate-700 font-bold uppercase tracking-[0.2em]">© 2026 Tüm Hakları Saklıdır</p>
+        </div>
+    </div>
+
+    <div id="noteEditor" class="fixed inset-0 z-[650] hidden bg-slate-950 flex flex-col transition-transform duration-500 translate-y-[100%]">
+        <div class="p-4 flex justify-between items-center border-b border-white/5 bg-slate-950/80 backdrop-blur-md sticky top-0 z-10">
+            <button onclick="closeNoteEditor()" class="p-3 text-slate-400 hover:text-white btn-bounce"><i data-lucide="chevron-left" class="w-6 h-6"></i></button>
+            <span class="font-black italic text-lg uppercase tracking-tight text-slate-200">Not Düzenle</span>
+            <button onclick="saveNote()" class="p-3 text-indigo-400 hover:text-indigo-300 btn-bounce bg-indigo-500/10 rounded-full"><i data-lucide="check" class="w-6 h-6"></i></button>
+        </div>
+        <div class="flex-1 p-6 flex flex-col gap-6 overflow-y-auto max-w-3xl mx-auto w-full">
+            <input type="text" id="noteTitle" class="w-full bg-transparent text-3xl font-black outline-none placeholder:text-slate-800 text-white transition-all focus:placeholder:text-slate-700" placeholder="Başlık...">
+            <div class="h-[1px] w-full bg-gradient-to-r from-indigo-500/50 to-transparent"></div>
+            <textarea id="noteBody" class="w-full flex-1 bg-transparent text-slate-300 font-medium leading-relaxed outline-none placeholder:text-slate-800 text-lg resize-none" placeholder="Buraya bir şeyler yaz..."></textarea>
+        </div>
+    </div>
+
+    <div id="settings" class="fixed inset-0 z-[700] hidden flex items-end justify-center bg-black/60 backdrop-blur-sm p-4 opacity-0 transition-opacity duration-300">
+        <div class="glass w-full max-w-lg rounded-[3rem] p-8 transform translate-y-full transition-transform duration-500 var(--spring) bg-[#0f172a]">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-2xl font-black italic accent-text uppercase tracking-tighter">Ayarlar</h2>
+                <button onclick="closeSettings()" class="p-3 bg-slate-800 rounded-full text-white hover:bg-slate-700 btn-bounce"><i data-lucide="chevron-down"></i></button>
+            </div>
+            <div class="space-y-4 max-h-[60vh] overflow-y-auto no-scrollbar">
+                <div class="p-5 bg-white/5 rounded-[2rem] border border-white/5 hover:border-indigo-500/30 transition-colors">
+                    <p class="text-[9px] font-black uppercase text-slate-500 mb-4 tracking-widest flex items-center gap-2"><i data-lucide="shield" class="w-3 h-3"></i> Güvenlik</p>
+                    <button onclick="changePass('main')" class="w-full flex justify-between items-center p-4 bg-slate-950 rounded-2xl text-xs font-bold mb-2 hover:bg-indigo-500/10 hover:text-indigo-400 transition-colors group">
+                        Giriş Şifresini Değiştir 
+                        <i data-lucide="key" class="w-4 h-4 text-slate-500 group-hover:text-indigo-400 transition-colors"></i>
+                    </button>
+                    <button onclick="changePass('panic')" class="w-full flex justify-between items-center p-4 bg-slate-950 rounded-2xl text-xs font-bold text-red-400 hover:bg-red-500/10 transition-colors">
+                        Panik Kodunu Ayarla 
+                        <i data-lucide="shield-alert" class="w-4 h-4"></i>
+                    </button>
+                </div>
+                <div class="p-5 bg-white/5 rounded-[2rem] border border-white/5 hover:border-indigo-500/30 transition-colors">
+                    <p class="text-[9px] font-black uppercase text-slate-500 mb-4 tracking-widest flex items-center gap-2"><i data-lucide="database" class="w-3 h-3"></i> Veri Tabanı</p>
+                    <button onclick="exportData()" class="w-full flex justify-between items-center p-4 bg-slate-950 rounded-2xl text-xs font-bold mb-2 hover:bg-indigo-500/10 hover:text-indigo-400 transition-colors">
+                        Yedeği Dışa Aktar (.json) 
+                        <i data-lucide="cloud-download" class="w-4 h-4 text-indigo-400"></i>
+                    </button>
+                    <label class="w-full flex justify-between items-center p-4 bg-slate-950 rounded-2xl text-xs font-bold cursor-pointer hover:bg-emerald-500/10 hover:text-emerald-400 transition-colors">
+                        Yedek Dosyası Yükle 
+                        <i data-lucide="cloud-upload" class="w-4 h-4 text-emerald-400"></i>
+                        <input type="file" id="importInp" class="hidden" onchange="importData(event)" accept=".json">
+                    </label>
+                </div>
+                <button onclick="nukeSystem()" class="w-full p-5 bg-red-600 text-white rounded-[2rem] font-black text-xs uppercase tracking-widest shadow-xl shadow-red-500/20 btn-bounce relative overflow-hidden group">
+                    <span class="relative z-10">Tüm Verileri Sıfırla</span>
+                    <div class="absolute inset-0 bg-black/20 translate-x-full group-hover:translate-x-0 transition-transform duration-300"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let db, files = [], notes = [], currentTab = 'all', isSelectMode = false, selectedIds = [], viewingId = null, editingNoteId = null;
+
+        const init = () => {
+            const req = indexedDB.open("BBP_VAULT_FINAL", 1);
+            req.onupgradeneeded = (e) => {
+                const database = e.target.result;
+                if (!database.objectStoreNames.contains("media")) database.createObjectStore("media", { keyPath: "id", autoIncrement: true });
+                if (!database.objectStoreNames.contains("notes")) database.createObjectStore("notes", { keyPath: "id", autoIncrement: true });
+            };
+            req.onsuccess = (e) => {
+                db = e.target.result;
+                checkSetup();
+                if (sessionStorage.getItem('bbp_session')) unlockSuccess(sessionStorage.getItem('bbp_session') === 'panic');
+            };
+            lucide.createIcons();
+        };
+
+        const checkSetup = () => {
+            const pass = localStorage.getItem('bbp_pass');
+            document.getElementById('authTitle').innerHTML = pass ? 'Vault <span class="accent-text text-2xl">Kilitli</span>' : 'Vault <span class="accent-text text-2xl">Kurulum</span>';
+        };
+
+        const loadAllData = async () => {
+            if (sessionStorage.getItem('bbp_session') === 'panic') { files = []; notes = []; render(); return; }
+            const txM = db.transaction("media", "readonly");
+            txM.objectStore("media").getAll().onsuccess = (e) => {
+                files = e.target.result || [];
+                const txN = db.transaction("notes", "readonly");
+                txN.objectStore("notes").getAll().onsuccess = (ev) => {
+                    notes = ev.target.result || [];
+                    render(true);
+                    updateStorageMetrics();
+                };
+            };
+        };
+
+        const handleAuth = () => {
+            const input = document.getElementById('authInput');
+            const val = input.value;
+            const stored = localStorage.getItem('bbp_pass');
+            const panic = localStorage.getItem('bbp_panic');
+            
+            const shake = () => {
+                input.parentElement.style.animation = 'shake 0.4s ease-in-out';
+                setTimeout(() => input.parentElement.style.animation = '', 400);
+            };
+
+            if (!stored) {
+                if (val.length < 4) { showError("ŞİFRE EN AZ 4 HANELİ OLMALI!"); shake(); return; }
+                localStorage.setItem('bbp_pass', btoa(val));
+                localStorage.setItem('bbp_panic', btoa('1923'));
+                unlockSuccess(false);
+            } else {
+                if (btoa(val) === stored) unlockSuccess(false);
+                else if (btoa(val) === panic) unlockSuccess(true);
+                else { showError("YANLIŞ ŞİFRE!"); shake(); input.value = ''; }
+            }
+        };
+
+        const unlockSuccess = (isPanic) => {
+            sessionStorage.setItem('bbp_session', isPanic ? 'panic' : 'active');
+            const auth = document.getElementById('authScreen');
+            auth.style.transform = 'translateY(-100%) scale(0.9)';
+            auth.style.opacity = '0';
+            
+            const app = document.getElementById('app');
+            app.classList.remove('hidden');
+            setTimeout(() => {
+                app.style.opacity = '1';
+                loadAllData();
+            }, 300);
+        };
+
+        const lockVault = () => { sessionStorage.removeItem('bbp_session'); location.reload(); };
+        const showError = (msg) => { const err = document.getElementById('authError'); err.innerText = msg; setTimeout(() => err.innerText = "", 3000); };
+        const togglePassView = () => { const inp = document.getElementById('authInput'); inp.type = inp.type === 'password' ? 'text' : 'password'; };
+
+        const handleSearch = () => render(false);
+
+        const setTab = (t) => {
+            if(currentTab === t) return;
+            currentTab = t;
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.getElementById('nav-' + (t === 'fav' ? 'fav' : (t === 'notes' ? 'notes' : 'all')))?.classList.add('active');
+            
+            const gView = document.getElementById('galleryView');
+            const nView = document.getElementById('notesView');
+            
+            if(t === 'notes') {
+                gView.style.opacity = 0;
+                gView.style.transform = 'translateX(-20px)';
+                setTimeout(() => {
+                    gView.classList.add('hidden');
+                    nView.classList.remove('hidden');
+                    void nView.offsetWidth;
+                    nView.style.opacity = 1;
+                    nView.style.transform = 'translateX(0)';
+                }, 300);
+            } else {
+                nView.style.opacity = 0;
+                nView.style.transform = 'translateX(20px)';
+                setTimeout(() => {
+                    nView.classList.add('hidden');
+                    gView.classList.remove('hidden');
+                    void gView.offsetWidth;
+                    gView.style.opacity = 1;
+                    gView.style.transform = 'translateX(0)';
+                }, 300);
+            }
+            setTimeout(() => render(true), 100);
+        };
+
+        const triggerMainAction = () => currentTab === 'notes' ? openNoteEditor() : document.getElementById('fileInp').click();
+
+        const handleUpload = async (e) => {
+            const filesToUpload = Array.from(e.target.files);
+            const status = document.getElementById('uploadStatus');
+            const bar = document.getElementById('progBar');
+            status.classList.remove('hidden');
+            status.style.animation = 'fadeScaleUp 0.5s var(--spring)';
+            
+            for (let i = 0; i < filesToUpload.length; i++) {
+                const f = filesToUpload[i];
+                const data = await new Promise(r => { const reader = new FileReader(); reader.onload = ev => r(ev.target.result); reader.readAsDataURL(f); });
+                await new Promise(r => {
+                    const tx = db.transaction("media", "readwrite");
+                    tx.objectStore("media").add({ name: f.name.split('.')[0], type: f.type, size: f.size, data, tag: 'genel', isFav: false, date: Date.now() }).onsuccess = r;
+                });
+                bar.style.width = Math.round(((i + 1) / filesToUpload.length) * 100) + "%";
+                document.getElementById('progVal').innerText = bar.style.width;
+            }
+            loadAllData();
+            setTimeout(() => {
+                status.style.opacity = '0';
+                status.style.transform = 'scale(0.9)';
+                setTimeout(() => {
+                    status.classList.add('hidden');
+                    status.style.opacity = '';
+                    status.style.transform = '';
+                    bar.style.width = '0%';
+                }, 300);
+            }, 800);
+        };
+
+        const render = (animate = false) => {
+            const search = document.getElementById('searchBar').value.toLowerCase();
+            const grid = currentTab === 'notes' ? document.getElementById('notesGrid') : document.getElementById('galleryGrid');
+            grid.innerHTML = "";
+            
+            let items = currentTab === 'notes' ? notes : files;
+            items.sort((a,b) => b.date - a.date);
+            
+            const filtered = items.filter(item => {
+                if(currentTab === 'notes') return (item.title.toLowerCase().includes(search) || item.content.toLowerCase().includes(search));
+                const match = item.name.toLowerCase().includes(search) || item.tag.toLowerCase().includes(search);
+                return currentTab === 'fav' ? match && item.isFav : match;
+            });
+
+            filtered.forEach((item, index) => {
+                let el;
+                const delayStyle = animate ? `animation-delay: ${index * 50}ms` : 'animation: none; opacity: 1;';
+                
+                if (currentTab === 'notes') {
+                    el = document.createElement('div'); 
+                    el.className = 'note-card glass group cursor-pointer hover:border-indigo-500/50 hover:bg-slate-800/50';
+                    el.style.cssText = delayStyle;
+                    el.onclick = () => openNoteEditor(item.id);
+                    el.innerHTML = `
+                        <h4 class="font-black text-slate-200 mb-2 truncate text-lg group-hover:text-indigo-400 transition-colors">${item.title || 'Başlıksız'}</h4>
+                        <p class="text-[11px] text-slate-500 line-clamp-4 font-bold leading-relaxed">${item.content}</p>
+                        <div class="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-2 group-hover:translate-y-0 duration-300">
+                            <i data-lucide="edit-2" class="w-4 h-4 text-indigo-400"></i>
+                        </div>
+                    `;
+                } else {
+                    const isS = selectedIds.includes(item.id);
+                    el = document.createElement('div'); 
+                    el.className = `media-card group ${isS ? 'selected' : ''}`;
+                    el.style.cssText = delayStyle;
+                    
+                    let content = '';
+                    if (item.type.startsWith('image')) content = `<img src="${item.data}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">`;
+                    else content = `<div class="w-full h-full bg-slate-900 flex items-center justify-center group-hover:bg-slate-800 transition-colors"><i data-lucide="${item.type.startsWith('video') ? 'play-circle' : 'music'}" class="w-10 h-10 accent-text group-hover:scale-125 transition-transform var(--spring)"></i></div>`;
+                    
+                    el.innerHTML = content + (isS ? '<div class="absolute inset-0 bg-indigo-500/50 backdrop-blur-sm flex items-center justify-center animate-fadeScaleUp"><i data-lucide="check" class="text-white w-8 h-8 drop-shadow-lg"></i></div>' : '');
+                    el.onclick = () => isSelectMode ? toggleSelect(item.id) : openViewer(item.id);
+                }
+                grid.appendChild(el);
+            });
+            
+            renderTags();
+            lucide.createIcons();
+            document.getElementById('emptyState').classList.toggle('hidden', filtered.length > 0);
+        };
+
+        const renderTags = () => {
+            if(currentTab === 'notes') { document.getElementById('tagBar').innerHTML = ''; return; }
+            const tags = ['hepsi', ...new Set(files.map(f => f.tag))];
+            const activeTag = document.getElementById('searchBar').value || 'hepsi';
+            document.getElementById('tagBar').innerHTML = tags.map(t => {
+                const isActive = activeTag === t || (activeTag === '' && t === 'hepsi');
+                return `<button onclick="filterByTag('${t}')" class="px-4 py-2 rounded-xl border ${isActive ? 'bg-indigo-500 text-white border-indigo-500 shadow-lg shadow-indigo-500/30' : 'bg-slate-900 border-slate-800 text-slate-500'} text-[10px] font-black uppercase tracking-widest transition-all duration-300 transform active:scale-95 whitespace-nowrap">#${t}</button>`
+            }).join('');
+        };
+        const filterByTag = (t) => { document.getElementById('searchBar').value = t === 'hepsi' ? '' : t; render(true); };
+
+        const toggleModal = (id, show) => {
+            const el = document.getElementById(id);
+            if (show) {
+                el.classList.remove('hidden');
+                void el.offsetWidth;
+                el.classList.remove('opacity-0');
+                if(id === 'settings' || id === 'noteEditor') {
+                    el.firstElementChild.style.transform = 'translateY(0)';
+                    el.classList.remove('translate-y-[100%]');
+                } else {
+                    const content = el.querySelector('.glass') || el.firstElementChild;
+                    if(content) content.style.transform = 'scale(1)';
+                }
+            } else {
+                el.classList.add('opacity-0');
+                if(id === 'settings') el.firstElementChild.style.transform = 'translateY(100%)';
+                if(id === 'noteEditor') el.classList.add('translate-y-[100%]');
+                else {
+                    const content = el.querySelector('.glass') || el.firstElementChild;
+                    if(content) content.style.transform = 'scale(0.9)';
+                }
+                setTimeout(() => el.classList.add('hidden'), 300);
+            }
+        };
+
+        const openViewer = (id) => {
+            const f = files.find(x => x.id === id);
+            viewingId = id;
+            const v = document.getElementById('viewer');
+            v.classList.remove('hidden');
+            setTimeout(() => v.classList.remove('opacity-0'), 10);
+
+            document.getElementById('vName').innerText = f.name;
+            document.getElementById('vTag').innerText = "#" + f.tag;
+            document.getElementById('vDate').innerText = new Date(f.date).toLocaleDateString();
+            
+            const cnt = document.getElementById('vContent');
+            cnt.innerHTML = ''; 
+            
+            let contentEl;
+            if (f.type.startsWith('image')) {
+                contentEl = `<img src="${f.data}" class="max-w-full max-h-[70vh] rounded-2xl shadow-2xl opacity-0 transform scale-90 transition-all duration-500 var(--spring)">`;
+            } else if (f.type.startsWith('video')) {
+                contentEl = `<video src="${f.data}" controls class="max-w-full max-h-[70vh] rounded-2xl shadow-2xl opacity-0 transform scale-90 transition-all duration-500"></video>`;
+            } else {
+                contentEl = `<div class="p-10 glass rounded-[2.5rem] opacity-0 transform scale-90 transition-all duration-500"><i data-lucide="music" class="w-16 h-16 accent-text mx-auto mb-6 animate-bounce"></i><audio src="${f.data}" controls class="w-64"></audio></div>`;
+            }
+            cnt.innerHTML = contentEl;
+            
+            setTimeout(() => {
+                const child = cnt.firstElementChild;
+                child.classList.remove('opacity-0', 'scale-90');
+                child.classList.add('opacity-100', 'scale-100');
+            }, 50);
+
+            updateFavState(f.isFav);
+            lucide.createIcons();
+        };
+        const closeViewer = () => {
+             const v = document.getElementById('viewer');
+             v.classList.add('opacity-0');
+             setTimeout(() => {
+                 v.classList.add('hidden');
+                 document.getElementById('vContent').innerHTML = "";
+             }, 300);
+        };
+
+        const downloadCurrent = () => {
+            const f = files.find(x => x.id === viewingId);
+            if (!f) return;
+            const a = document.createElement('a');
+            a.href = f.data;
+            a.download = f.name + (f.type.includes('image') ? '.jpg' : (f.type.includes('video') ? '.mp4' : '.mp3'));
+            a.click();
+        };
+
+        const toggleFavCurrent = () => {
+            const f = files.find(x => x.id === viewingId);
+            f.isFav = !f.isFav;
+            updateFavState(f.isFav);
+            const tx = db.transaction("media", "readwrite");
+            tx.objectStore("media").put(f).oncomplete = () => loadAllData();
+            
+            const btn = document.getElementById('vFav');
+            btn.style.transform = 'scale(1.2)';
+            setTimeout(() => btn.style.transform = 'scale(1)', 200);
+        };
+
+        const updateFavState = (s) => { 
+            const b = document.getElementById('vFav'); 
+            b.innerHTML = `<i data-lucide="heart" class="${s ? 'fill-red-500 text-red-500' : 'text-white'} w-5 h-5 transition-all duration-300"></i>`; 
+            lucide.createIcons();
+        };
+
+        const openEditInfoModal = () => {
+            const f = files.find(x => x.id === viewingId);
+            document.getElementById('editFileName').value = f.name;
+            document.getElementById('editFileTag').value = f.tag;
+            toggleModal('editInfoModal', true);
+        };
+        const closeEditInfoModal = () => toggleModal('editInfoModal', false);
+        const saveFileInfoChanges = () => {
+            const f = files.find(x => x.id === viewingId);
+            f.name = document.getElementById('editFileName').value;
+            f.tag = document.getElementById('editFileTag').value.trim().toLowerCase();
+            const tx = db.transaction("media", "readwrite");
+            tx.objectStore("media").put(f).oncomplete = () => { 
+                document.getElementById('vName').innerText = f.name;
+                document.getElementById('vTag').innerText = "#" + f.tag;
+                loadAllData();
+                closeEditInfoModal();
+            };
+        };
+
+        const deleteSingle = () => { if (confirm("Kalıcı olarak silinsin mi?")) { const tx = db.transaction("media", "readwrite"); tx.objectStore("media").delete(viewingId).onsuccess = () => { closeViewer(); loadAllData(); }; } };
+        
+        const openInfoModal = () => toggleModal('infoModal', true);
+        const closeInfoModal = () => toggleModal('infoModal', false);
+
+        const openNoteEditor = (id = null) => { 
+            editingNoteId = id; 
+            const n = id ? notes.find(x => x.id === id) : { title: '', content: '' }; 
+            document.getElementById('noteTitle').value = n.title; 
+            document.getElementById('noteBody').value = n.content; 
+            
+            const el = document.getElementById('noteEditor');
+            el.classList.remove('hidden');
+            void el.offsetWidth;
+            el.classList.remove('translate-y-[100%]');
+        };
+        const closeNoteEditor = () => {
+            const el = document.getElementById('noteEditor');
+            el.classList.add('translate-y-[100%]');
+            setTimeout(() => el.classList.add('hidden'), 500);
+        };
+        
+        const saveNote = () => { 
+            const tx = db.transaction("notes", "readwrite"); 
+            const noteObj = { title: document.getElementById('noteTitle').value, content: document.getElementById('noteBody').value, date: Date.now() }; 
+            if (editingNoteId) noteObj.id = editingNoteId; 
+            tx.objectStore("notes").put(noteObj).onsuccess = () => { loadAllData(); closeNoteEditor(); }; 
+        };
+
+        const toggleSelectMode = () => { 
+            isSelectMode = !isSelectMode; 
+            selectedIds = []; 
+            const bar = document.getElementById('bulkBar');
+            if(isSelectMode) {
+                bar.classList.remove('hidden');
+                setTimeout(() => bar.classList.remove('translate-y-20'), 10);
+            } else {
+                bar.classList.add('translate-y-20');
+                setTimeout(() => bar.classList.add('hidden'), 500);
+            }
+            render(true); 
+        };
+        const toggleSelect = (id) => { const i = selectedIds.indexOf(id); i > -1 ? selectedIds.splice(i, 1) : selectedIds.push(id); document.getElementById('bulkCount').innerHTML = `<i data-lucide="check-circle-2" class="w-4 h-4"></i> ${selectedIds.length} Seçildi`; lucide.createIcons(); render(false); };
+        const deleteSelected = () => { const tx = db.transaction("media", "readwrite"); selectedIds.forEach(id => tx.objectStore("media").delete(id)); tx.oncomplete = () => { toggleSelectMode(); loadAllData(); }; };
+
+        const updateStorageMetrics = () => { const b = files.reduce((acc, f) => acc + (f.size || 0), 0); document.getElementById('storageInfo').innerText = (b / (1024 * 1024)).toFixed(1) + " MB DOLU"; };
+        const openSettings = () => toggleModal('settings', true);
+        const closeSettings = () => toggleModal('settings', false);
+        const changePass = (t) => { const v = prompt("Yeni Kod:"); if(v) localStorage.setItem(t==='main'?'bbp_pass':'bbp_panic', btoa(v)); };
+        const nukeSystem = () => { if(prompt("Verileri silmek için 'SIL' yazın:")==='SIL') { indexedDB.deleteDatabase("BBP_VAULT_FINAL"); localStorage.clear(); location.reload(); } };
+        const exportData = () => { const a = document.createElement('a'); a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({media:files, notes:notes})); a.download = "vault_backup.json"; a.click(); };
+        const importData = (e) => { const r = new FileReader(); r.onload = ev => { const d = JSON.parse(ev.target.result); const txM = db.transaction("media", "readwrite"); d.media.forEach(f => { delete f.id; txM.objectStore("media").add(f); }); loadAllData(); }; r.readAsText(e.target.files[0]); };
+
+        window.onload = init;
+    </script>
+</body>
+</html>
