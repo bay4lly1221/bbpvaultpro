@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>BBP VAULT | v1.0 PRO</title>
+    <title>BBP VAULT | v1.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -48,16 +48,16 @@
         .accent-bg   { background-color: var(--accent); }
         .accent-text { color: var(--accent); }
         
-        .btn-bounce { transition: transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275), background 0.3s ease, box-shadow 0.3s ease; }
+        .btn-bounce { transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s ease, box-shadow 0.3s ease; }
         .btn-bounce:active { transform: scale(0.85) !important; }
         .btn-bounce:hover  { transform: translateY(-2px); box-shadow: 0 10px 20px -10px rgba(99,102,241,0.5); }
 
-        .nav-item { transition: all 0.4s cubic-bezier(0.175,0.885,0.32,1.275); position: relative; }
+        .nav-item { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; }
         .nav-item.active { color: var(--accent); transform: translateY(-5px) scale(1.1); }
         .nav-item::after {
             content:''; position:absolute; bottom:-5px; left:50%; transform:translateX(-50%) scale(0);
             width:4px; height:4px; background:var(--accent); border-radius:50%;
-            transition: transform 0.3s cubic-bezier(0.175,0.885,0.32,1.275);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .nav-item.active::after { transform: translateX(-50%) scale(1); }
         
@@ -74,7 +74,7 @@
             transform-origin: center;
             transition: border-color 0.3s ease, transform 0.2s ease;
             opacity: 0;
-            animation: popIn 0.6s cubic-bezier(0.175,0.885,0.32,1.275) forwards;
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
             cursor: pointer;
         }
         .media-card:active { transform: scale(0.95); }
@@ -107,7 +107,7 @@
             75%      { transform:translateX(6px); }
         }
 
-        .modal-enter { animation: fadeScaleUp 0.4s cubic-bezier(0.175,0.885,0.32,1.275) forwards; }
+        .modal-enter { animation: fadeScaleUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
         
         .modern-input {
             background: rgba(15,23,42,0.6);
@@ -179,7 +179,7 @@
         <h1 id="authTitle" class="text-4xl font-black mb-2 italic tracking-tighter uppercase">
             Vault <span class="accent-text text-2xl">v1.0</span>
         </h1>
-        <p class="text-slate-500 text-[10px] mb-10 uppercase tracking-[0.4em] font-bold">ASKERİ DÜZEY AES-256 KORUMA</p>
+        <p class="text-slate-500 text-[10px] mb-10 uppercase tracking-[0.4em] font-bold">Güvenli Erişim</p>
         
         <div class="space-y-4">
             <div class="relative group" id="authInputWrap">
@@ -231,7 +231,7 @@
                 <div class="relative group">
                     <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-indigo-400 transition-colors pointer-events-none"></i>
                     <input type="text" id="searchBar" oninput="handleSearch()"
-                        class="modern-input pl-11" placeholder="Kasa içinde ara (AES Canlı Arama)...">
+                        class="modern-input pl-11" placeholder="Kasa içinde ara...">
                 </div>
                 <div id="tagBar" class="flex gap-2 overflow-x-auto no-scrollbar pb-1"></div>
             </div>
@@ -244,7 +244,7 @@
                 <div class="flex justify-between items-center mb-3">
                     <span id="uploadStatusTitle" class="text-[10px] font-black uppercase tracking-[0.2em] accent-text flex items-center gap-2">
                         <span class="w-2 h-2 rounded-full bg-indigo-500 animate-ping inline-block"></span>
-                        Şifreleniyor ve Yükleniyor...
+                        Yükleniyor...
                     </span>
                     <span id="progVal" class="text-xs font-bold text-white">0%</span>
                 </div>
@@ -263,7 +263,7 @@
                     <div class="p-2 bg-slate-800 rounded-full group-hover:bg-indigo-500/20 transition-colors">
                         <i data-lucide="plus" class="w-4 h-4"></i>
                     </div>
-                    Yeni Kriptolu Not
+                    Yeni Gizli Not
                 </button>
                 <div id="notesGrid"></div>
             </div>
@@ -273,8 +273,8 @@
                     <div class="absolute inset-0 bg-indigo-500/20 blur-2xl rounded-full"></div>
                     <i data-lucide="wind" class="w-20 h-20 relative z-10 text-slate-400"></i>
                 </div>
-                <p class="font-black text-sm uppercase tracking-widest text-slate-500">Burası şimdilik güvenli ve boş</p>
-                <p class="text-[10px] text-slate-600 mt-1">+ butonuna bas veya dosyaları buraya sürükle</p>
+                <p class="font-black text-sm uppercase tracking-widest text-slate-500">Burası şimdilik boş</p>
+                <p class="text-[10px] text-slate-600 mt-1">+ butonuna bas, içerik ekle</p>
             </div>
 
             <div class="h-28"></div>
@@ -357,6 +357,12 @@
     <div id="vContent" class="flex-1 flex items-center justify-center p-4 overflow-hidden"></div>
 
     <div class="absolute bottom-0 left-0 right-0 p-6 pb-10 bg-gradient-to-t from-black via-black/70 to-transparent text-center">
+        <div id="zoomContainer" class="flex items-center justify-center gap-3 mb-4 max-w-xs mx-auto text-slate-400 bg-slate-900/60 backdrop-blur-md py-2 px-4 rounded-full border border-white/5 hidden">
+            <i data-lucide="zoom-out" class="w-4 h-4"></i>
+            <input type="range" id="zoomSlider" min="1" max="4" step="0.05" value="1" oninput="handleZoom(this.value)" class="w-full accent-indigo-500 h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer">
+            <i data-lucide="zoom-in" class="w-4 h-4"></i>
+        </div>
+        
         <h3 id="vName" class="text-xl font-black truncate italic uppercase tracking-tight text-white drop-shadow-lg"></h3>
         <div class="flex justify-center gap-3 mt-2">
             <span id="vTag" class="text-[10px] accent-bg text-white px-4 py-1.5 rounded-full font-black uppercase tracking-widest"></span>
@@ -403,7 +409,7 @@
             <i data-lucide="award" class="w-10 h-10 text-indigo-400"></i>
         </div>
         <h2 class="text-2xl font-black italic accent-text tracking-tighter uppercase mb-1 relative z-10">VAULT PRO</h2>
-        <p class="text-[10px] text-slate-500 font-bold tracking-[0.3em] mb-6 uppercase">v1.0 - Gelişmiş Güvenlik Sürümü</p>
+        <p class="text-[10px] text-slate-500 font-bold tracking-[0.3em] mb-6 uppercase">v1.0-Stable Edition</p>
         <div class="space-y-4 relative z-10">
             <div class="bg-white/5 p-4 rounded-2xl border border-white/5">
                 <p class="text-[9px] text-slate-500 font-black uppercase tracking-widest mb-2">Geliştiriciler</p>
@@ -462,11 +468,11 @@
         <div class="space-y-3 max-h-[65vh] overflow-y-auto no-scrollbar pb-2">
             <div class="p-5 bg-white/5 rounded-[1.75rem] border border-white/5">
                 <p class="text-[9px] font-black uppercase text-slate-500 mb-3 tracking-widest flex items-center gap-2">
-                    <i data-lucide="shield" class="w-3 h-3"></i> Güvenlik (Kripto Modu)
+                    <i data-lucide="shield" class="w-3 h-3"></i> Güvenlik
                 </p>
                 <button onclick="changePass('main')" type="button"
                     class="w-full flex justify-between items-center p-4 bg-slate-950 rounded-2xl text-xs font-bold mb-2 hover:bg-indigo-500/10 hover:text-indigo-400 transition-colors group">
-                    Giriş Şifresini Değiştir (Verileri Yeniden Şifreler)
+                    Giriş Şifresini Değiştir
                     <i data-lucide="key" class="w-4 h-4 text-slate-500 group-hover:text-indigo-400 transition-colors"></i>
                 </button>
                 <button onclick="changePass('panic')" type="button"
@@ -477,15 +483,15 @@
             </div>
             <div class="p-5 bg-white/5 rounded-[1.75rem] border border-white/5">
                 <p class="text-[9px] font-black uppercase text-slate-500 mb-3 tracking-widest flex items-center gap-2">
-                    <i data-lucide="database" class="w-3 h-3"></i> Güvenli Veri Tabanı
+                    <i data-lucide="database" class="w-3 h-3"></i> Veri Tabanı
                 </p>
                 <button onclick="exportData()" type="button"
                     class="w-full flex justify-between items-center p-4 bg-slate-950 rounded-2xl text-xs font-bold mb-2 hover:bg-indigo-500/10 hover:text-indigo-400 transition-colors">
-                    Şifreli Yedeği Dışa Aktar (.json)
+                    Yedeği Dışa Aktar (.json)
                     <i data-lucide="cloud-download" class="w-4 h-4 text-indigo-400"></i>
                 </button>
                 <label class="w-full flex justify-between items-center p-4 bg-slate-950 rounded-2xl text-xs font-bold cursor-pointer hover:bg-emerald-500/10 hover:text-emerald-400 transition-colors">
-                    Şifreli Yedek Dosyası Yükle
+                    Yedek Dosyası Yükle
                     <i data-lucide="cloud-upload" class="w-4 h-4 text-emerald-400"></i>
                     <input type="file" id="importInp" class="hidden" onchange="importData(event)" accept=".json">
                 </label>
@@ -504,10 +510,30 @@
         window.lucide = { createIcons: () => {} };
     }
 
-    // --- RAM GÜVENLİK DEĞİŞKENİ ---
     let masterPassword = sessionStorage.getItem('bbp_mp') || "";
 
-    // --- KRİPTOGRAFİ MOTORU (WEB CRYPTO API) ---
+    // ── GÜVENLİ PARÇALI BASE64 MOTORU (BUG FIX) ────────────
+    function bytesToBase64(bytes) {
+        let binary = '';
+        const len = bytes.byteLength;
+        const chunk = 16384; // 16KB güvenli döngü blokları (RangeError koruması)
+        for (let i = 0; i < len; i += chunk) {
+            binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));
+        }
+        return btoa(binary);
+    }
+
+    function base64ToBytes(base64) {
+        const binaryString = atob(base64);
+        const len = binaryString.length;
+        const bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+        }
+        return bytes;
+    }
+
+    // ── CRYPTO ENGINE (SHA-256 & AES-GCM) ────────────────
     async function hashPassword(password) {
         const msgBuffer = new TextEncoder().encode(password);
         const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
@@ -545,17 +571,17 @@
         );
 
         return {
-            ciphertext: btoa(String.fromCharCode(...new Uint8Array(encrypted))),
-            iv: btoa(String.fromCharCode(...iv)),
-            salt: btoa(String.fromCharCode(...salt))
+            ciphertext: bytesToBase64(new Uint8Array(encrypted)),
+            iv: bytesToBase64(iv),
+            salt: bytesToBase64(salt)
         };
     }
 
     async function decryptData(encryptedObj, password) {
         try {
-            const salt = new Uint8Array(atob(encryptedObj.salt).split("").map(c => c.charCodeAt(0)));
-            const iv = new Uint8Array(atob(encryptedObj.iv).split("").map(c => c.charCodeAt(0)));
-            const ciphertext = new Uint8Array(atob(encryptedObj.ciphertext).split("").map(c => c.charCodeAt(0)));
+            const salt = base64ToBytes(encryptedObj.salt);
+            const iv = base64ToBytes(encryptedObj.iv);
+            const ciphertext = base64ToBytes(encryptedObj.ciphertext);
             
             const key = await deriveKey(password, salt);
             const decrypted = await crypto.subtle.decrypt(
@@ -569,7 +595,7 @@
         }
     }
 
-    // --- UYGULAMA DURUMU (STATE) ---
+    // ── STATE ────────────────────────────────────────────
     let db, files = [], notes = [],
         currentTab  = 'all',
         isSelectMode = false,
@@ -578,7 +604,7 @@
         editingNoteId = null,
         activeTag    = 'hepsi';
 
-    // ── BAŞLANGIÇ (INIT) ──────────────────────────────────
+    // ── INIT ──────────────────────────────────────────────
     const init = () => {
         try {
             const req = indexedDB.open("BBP_VAULT_FINAL", 1);
@@ -618,7 +644,6 @@
             });
         }
 
-        // --- SÜRÜKLE BIRAK ENTEGRASYONU ---
         const dropZone = document.getElementById('mainScroll');
         if (dropZone) {
             ['dragenter', 'dragover'].forEach(name => {
@@ -642,11 +667,6 @@
                 }
             });
         }
-
-        // --- PWA SERVICE WORKER REGISTRATION ---
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js').catch(() => {});
-        }
     };
 
     const checkSetup = () => {
@@ -656,7 +676,7 @@
             : 'Vault <span class="accent-text text-2xl">Kurulum</span>';
     };
 
-    // ── KİMLİK DOĞRULAMA (AUTH) ───────────────────────────
+    // ── AUTH ──────────────────────────────────────────────
     const handleAuth = async () => {
         const input = document.getElementById('authInput');
         const val   = input.value;
@@ -739,7 +759,7 @@
         lucide.createIcons();
     };
 
-    // ── ASENKRON DEKRİPTOR VE VERİ YÜKLEME ────────────────
+    // ── DATA LOADING ──────────────────────────────────────
     const loadAllData = () => {
         if (!db) return;
         if (sessionStorage.getItem('bbp_session') === 'panic') {
@@ -751,14 +771,13 @@
             const rawFiles = e.target.result || [];
             files = [];
             
-            // Canlı AES Şifre Çözümü
             for(let f of rawFiles) {
                 try {
-                    if (typeof f.data === 'object' && f.data.ciphertext) {
+                    if (typeof f.data === 'object' && f.data && f.data.ciphertext) {
                         f.data = await decryptData(f.data, masterPassword);
                     }
                     files.push(f);
-                } catch(err) { console.error("Medya dekript hatası:", err); }
+                } catch(err) { console.error("Dekript hatası:", err); }
             }
 
             const txN = db.transaction("notes","readonly");
@@ -768,14 +787,14 @@
                 
                 for(let n of rawNotes) {
                     try {
-                        if (typeof n.title === 'object' && n.title.ciphertext) {
+                        if (typeof n.title === 'object' && n.title && n.title.ciphertext) {
                             n.title = await decryptData(n.title, masterPassword);
                         }
-                        if (typeof n.content === 'object' && n.content.ciphertext) {
+                        if (typeof n.content === 'object' && n.content && n.content.ciphertext) {
                             n.content = await decryptData(n.content, masterPassword);
                         }
                         notes.push(n);
-                    } catch(err) { console.error("Not dekript hatası:", err); }
+                    } catch(err) { console.error("Dekript hatası:", err); }
                 }
                 
                 render(true);
@@ -784,7 +803,7 @@
         };
     };
 
-    // ── KRİPTOLU DOSYA YÜKLEME (UPLOAD) ───────────────────
+    // ── UPLOAD ────────────────────────────────────────────
     const handleUpload = async (e) => {
         const list = Array.from(e.target.files);
         if (!list.length) return;
@@ -806,7 +825,6 @@
                 reader.readAsDataURL(f);
             });
 
-            // AES-GCM Şifreleme katmanı tetikleniyor
             const encryptedPayload = await encryptData(data, masterPassword);
 
             await new Promise((res) => {
@@ -815,7 +833,7 @@
                     name:  f.name.replace(/\.[^.]+$/, ''),
                     type:  f.type,
                     size:  f.size,
-                    data:  encryptedPayload, // Veritabanına saf veri gitmez.
+                    data:  encryptedPayload,
                     tag:   'genel',
                     isFav: false,
                     date:  Date.now()
@@ -843,7 +861,7 @@
         }, 900);
     };
 
-    // ── RENDER FONKSİYONLARI ──────────────────────────────
+    // ── RENDER ────────────────────────────────────────────
     const esc = (s) => s ? String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : '';
 
     const render = (animate = false) => {
@@ -986,7 +1004,15 @@
         setTimeout(() => render(true), 250);
     };
 
-    // ── GÖRÜNTÜLEYİCİ (VIEWER) ────────────────────────────
+    // ── SLIDER ZOOM FONKSİYONU ────────────────────────────
+    const handleZoom = (val) => {
+        const mediaEl = document.querySelector('#vContent img, #vContent video');
+        if (mediaEl) {
+            mediaEl.style.transform = `scale(${val})`;
+        }
+    };
+
+    // ── VIEWER ────────────────────────────────────────────
     const openViewer = (id) => {
         const f = files.find(x => x.id === id);
         if (!f) return;
@@ -1000,6 +1026,16 @@
         document.getElementById('vTag').innerText  = '#' + (f.tag || 'genel');
         document.getElementById('vDate').innerText = new Date(f.date).toLocaleDateString('tr-TR');
 
+        // Zoom Slider'ı sıfırla ve ses dosyalarında gizle
+        const zoomSlider = document.getElementById('zoomSlider');
+        if (zoomSlider) zoomSlider.value = 1;
+        
+        const zoomContainer = document.getElementById('zoomContainer');
+        if (zoomContainer) {
+            if (f.type.startsWith('audio')) zoomContainer.classList.add('hidden');
+            else zoomContainer.classList.remove('hidden');
+        }
+
         const cnt = document.getElementById('vContent');
         cnt.innerHTML = '';
 
@@ -1007,11 +1043,11 @@
         if (f.type.startsWith('image')) {
             el = document.createElement('img');
             el.src = f.data;
-            el.style.cssText = 'max-width:100%;max-height:65vh;object-fit:contain;border-radius:1rem;box-shadow:0 25px 50px rgba(0,0,0,.5);opacity:0;transform:scale(0.95);transition:all .4s cubic-bezier(0.175,0.885,0.32,1.275);';
+            el.style.cssText = 'max-width:100%;max-height:65vh;object-fit:contain;border-radius:1rem;box-shadow:0 25px 50px rgba(0,0,0,.5);opacity:0;transform:scale(1);transition:opacity .3s ease, transform 0.1s linear;transform-origin:center;';
         } else if (f.type.startsWith('video')) {
             el = document.createElement('video');
             el.src = f.data; el.controls = true;
-            el.style.cssText = 'max-width:100%;max-height:65vh;border-radius:1rem;box-shadow:0 25px 50px rgba(0,0,0,.5);opacity:0;transform:scale(0.95);transition:all .4s cubic-bezier(0.175,0.885,0.32,1.275);';
+            el.style.cssText = 'max-width:100%;max-height:65vh;border-radius:1rem;box-shadow:0 25px 50px rgba(0,0,0,.5);opacity:0;transform:scale(1);transition:opacity .3s ease, transform 0.1s linear;transform-origin:center;';
         } else {
             el = document.createElement('div');
             el.style.cssText = 'padding:2.5rem;display:flex;flex-direction:column;align-items:center;gap:1rem;opacity:0;transform:scale(0.95);transition:all .4s cubic-bezier(0.175,0.885,0.32,1.275);';
@@ -1023,7 +1059,8 @@
 
         cnt.appendChild(el);
         setTimeout(() => {
-            el.style.opacity = '1'; el.style.transform = 'scale(1)';
+            el.style.opacity = '1';
+            if(!f.type.startsWith('image') && !f.type.startsWith('video')) el.style.transform = 'scale(1)';
             lucide.createIcons();
         }, 60);
 
@@ -1059,7 +1096,6 @@
         f.isFav = !f.isFav;
         updateFavState(f.isFav);
         
-        // Veritabanı güncellemesi için arka planda tekrar şifreleme tetiklemeden sadece parametre güncelliyoruz
         const tx = db.transaction("media","readwrite");
         tx.objectStore("media").get(viewingId).onsuccess = (e) => {
             const dbObj = e.target.result;
@@ -1120,7 +1156,7 @@
         };
     };
 
-    // ── KRİPTOLU NOTLAR KATMANI ───────────────────────────
+    // ── NOTLAR ───────────────────────────────────────────
     const openNoteEditor = (id = null) => {
         editingNoteId = id;
         const n = id ? (notes.find(x => x.id === id) || {}) : {};
@@ -1140,11 +1176,10 @@
     };
 
     const saveNote = async () => {
-        const title   = document.getElementById('noteTitle').value.trim();
+        const title = document.getElementById('noteTitle').value.trim();
         const content = document.getElementById('noteBody').value.trim();
         if (!title && !content) { closeNoteEditor(); return; }
 
-        // Not başlığı ve içeriği AES-GCM ile ayrı ayrı şifreleniyor
         const encryptedTitle = await encryptData(title, masterPassword);
         const encryptedContent = await encryptData(content, masterPassword);
 
@@ -1156,7 +1191,7 @@
         };
     };
 
-    // ── ÇOKLU SEÇİM MODU ──────────────────────────────────
+    // ── SEÇİM MODU ────────────────────────────────────────
     const toggleSelectMode = () => {
         isSelectMode = !isSelectMode;
         selectedIds  = [];
@@ -1195,7 +1230,7 @@
     const updateStorageMetrics = () => {
         const mb = (files.reduce((a,f) => a+(f.size||0), 0) / 1048576).toFixed(1);
         const info = document.getElementById('storageInfo');
-        if(info) info.innerText = mb + ' MB · ' + files.length + ' Kriptolu Dosya';
+        if(info) info.innerText = mb + ' MB · ' + files.length + ' Dosya';
     };
 
     const toggleModal = (id, show) => {
@@ -1219,49 +1254,61 @@
     const openSettings      = () => toggleModal('settings',      true);
     const closeSettings     = () => toggleModal('settings',      false);
 
-    // ── Gelişmiş Şifre Değiştirme (RE-ENCRYPTION ENGINE) ──
+    // ── ŞİFRE DEĞİŞTİRME & RE-ENCRYPTION ENGINE ───────────
     const changePass = async (type) => {
-        const v = prompt(type==='main' ? 'Yeni giriş şifresi (En az 4 karakter):' : 'Yeni panik kodu:');
+        const v = prompt(type==='main' ? 'Yeni giriş şifresi:' : 'Yeni panik kodu:');
         if (v === null) return;
         if (v.length < 4) { alert('En az 4 karakter gerekli.'); return; }
         
         const hashed = await hashPassword(v);
         
         if (type === 'main') {
-            // VERİ TABANINI YENİDEN ŞİFRELEME (RE-KEYING)
-            // Bellekteki ham veriyi alıp yeni türetilen anahtarla baştan paketler
             try {
-                // 1. Tüm medyaları yeni şifreyle güncelle
-                const txM = db.transaction("media", "readwrite");
+                const encryptedFiles = [];
                 for (let f of files) {
-                    const encryptedData = await encryptData(f.data, v);
-                    txM.objectStore("media").get(f.id).onsuccess = (evt) => {
-                        const dObj = evt.target.result;
-                        dObj.data = encryptedData;
-                        txM.objectStore("media").put(dObj);
-                    };
+                    const enc = await encryptData(f.data, v);
+                    encryptedFiles.push({ id: f.id, data: enc });
+                }
+
+                const encryptedNotes = [];
+                for (let n of notes) {
+                    const encTitle = await encryptData(n.title, v);
+                    const encContent = await encryptData(n.content, v);
+                    encryptedNotes.push({ id: n.id, title: encTitle, content: encContent });
+                }
+
+                if (encryptedFiles.length > 0) {
+                    const txM = db.transaction("media", "readwrite");
+                    const storeM = txM.objectStore("media");
+                    for (let ef of encryptedFiles) {
+                        storeM.get(ef.id).onsuccess = (evt) => {
+                            const dObj = evt.target.result;
+                            dObj.data = ef.data;
+                            storeM.put(dObj);
+                        };
+                    }
                 }
                 
-                // 2. Tüm notları yeni şifreyle güncelle
-                const txN = db.transaction("notes", "readwrite");
-                for (let n of notes) {
-                    const encryptedTitle = await encryptData(n.title, v);
-                    const encryptedContent = await encryptData(n.content, v);
-                    txN.objectStore("notes").get(n.id).onsuccess = (evt) => {
-                        const nObj = evt.target.result;
-                        nObj.title = encryptedTitle;
-                        nObj.content = encryptedContent;
-                        txN.objectStore("notes").put(nObj);
-                    };
+                if (encryptedNotes.length > 0) {
+                    const txN = db.transaction("notes", "readwrite");
+                    const storeN = txN.objectStore("notes");
+                    for (let en of encryptedNotes) {
+                        storeN.get(en.id).onsuccess = (evt) => {
+                            const nObj = evt.target.result;
+                            nObj.title = en.title;
+                            nObj.content = en.content;
+                            storeN.put(nObj);
+                        };
+                    }
                 }
                 
                 localStorage.setItem('bbp_pass', hashed);
                 masterPassword = v;
                 sessionStorage.setItem('bbp_mp', v);
-                alert('Tüm veritabanı yeni AES-256 anahtarınızla başarıyla yeniden şifrelendi!');
+                alert('Şifre değiştirildi ve tüm veriler başarıyla güncellendi.');
                 loadAllData();
             } catch (err) {
-                alert('Yeniden şifreleme başarısız: ' + err.message);
+                alert('Hata oluştu, şifre değiştirilemedi: ' + err.message);
             }
         } else {
             localStorage.setItem('bbp_panic', hashed);
@@ -1270,26 +1317,25 @@
     };
 
     const nukeSystem = () => {
-        if (prompt("Tüm verileri silmek ve sıfırlamak için 'SIL' yazın:") === 'SIL') {
+        if (prompt("Tüm verileri silmek için 'SIL' yazın:") === 'SIL') {
             indexedDB.deleteDatabase("BBP_VAULT_FINAL");
             localStorage.clear(); sessionStorage.clear();
             location.reload();
         }
     };
 
-    // ── GÜVENLİ ŞİFRELİ VERİ YEDEĞİ (EXPORT/IMPORT) ───────
+    // ── YEDEKLEME (EXPORT / IMPORT) ───────────────────────
     const exportData = () => {
-        // Ham şifreli IndexedDB verisini doğrudan dışa aktarır, böylece yedek dosyası çalınsa bile çözülemez!
         const txM = db.transaction("media","readonly");
         txM.objectStore("media").getAll().onsuccess = (e) => {
             const rawFiles = e.target.result || [];
             const txN = db.transaction("notes","readonly");
             txN.objectStore("notes").getAll().onsuccess = (ev) => {
                 const rawNotes = ev.target.result || [];
-                const payload = JSON.stringify({ media:rawFiles, notes:rawNotes, exported:new Date().toISOString(), secure: true });
+                const payload = JSON.stringify({ media:rawFiles, notes:rawNotes, exported:new Date().toISOString() });
                 const a = document.createElement('a');
                 a.href = 'data:text/json;charset=utf-8,' + encodeURIComponent(payload);
-                a.download = 'vault_aes_secured_backup_' + new Date().toISOString().slice(0,10) + '.json';
+                a.download = 'vault_backup_' + new Date().toISOString().slice(0,10) + '.json';
                 document.body.appendChild(a); a.click(); document.body.removeChild(a);
             };
         };
@@ -1312,13 +1358,13 @@
                     if (nts.length) {
                         const txN = db.transaction("notes","readwrite");
                         nts.forEach(n => { const o={...n}; delete o.id; txN.objectStore("notes").add(o); });
-                        txN.oncomplete = () => { alert('Kriptolu yedek başarıyla içeri aktarıldı.'); loadAllData(); };
+                        txN.oncomplete = () => { alert('Yedek başarıyla içeri aktarıldı.'); loadAllData(); };
                     } else {
-                        alert('Kriptolu yedek başarıyla içeri aktarıldı.'); loadAllData();
+                        alert('Yedek başarıyla içeri aktarıldı.'); loadAllData();
                     }
                 };
             } catch(err) {
-                alert('Yedek okunamadı veya biçim geçersiz: ' + err.message);
+                alert('Yedek okunamadı: ' + err.message);
             }
         };
         r.readAsText(file);
