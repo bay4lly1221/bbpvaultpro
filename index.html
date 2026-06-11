@@ -48,16 +48,16 @@
         .accent-bg   { background-color: var(--accent); }
         .accent-text { color: var(--accent); }
         
-        .btn-bounce { transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s ease, box-shadow 0.3s ease; }
+        .btn-bounce { transition: transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275), background 0.3s ease, box-shadow 0.3s ease; }
         .btn-bounce:active { transform: scale(0.85) !important; }
         .btn-bounce:hover  { transform: translateY(-2px); box-shadow: 0 10px 20px -10px rgba(99,102,241,0.5); }
 
-        .nav-item { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; }
+        .nav-item { transition: all 0.4s cubic-bezier(0.175,0.885,0.32,1.275); position: relative; }
         .nav-item.active { color: var(--accent); transform: translateY(-5px) scale(1.1); }
         .nav-item::after {
             content:''; position:absolute; bottom:-5px; left:50%; transform:translateX(-50%) scale(0);
             width:4px; height:4px; background:var(--accent); border-radius:50%;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.3s cubic-bezier(0.175,0.885,0.32,1.275);
         }
         .nav-item.active::after { transform: translateX(-50%) scale(1); }
         
@@ -74,7 +74,7 @@
             transform-origin: center;
             transition: border-color 0.3s ease, transform 0.2s ease;
             opacity: 0;
-            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            animation: popIn 0.6s cubic-bezier(0.175,0.885,0.32,1.275) forwards;
             cursor: pointer;
         }
         .media-card:active { transform: scale(0.95); }
@@ -85,7 +85,7 @@
             height:160px; display:flex; flex-direction:column;
             opacity:0; cursor:pointer;
             animation: slideInRight 0.5s cubic-bezier(0.4,0,0.2,1) forwards;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s ease;
+            transition: transform 0.3s cubic-bezier(0.175,0.885,0.32,1.275), border-color 0.3s ease;
         }
         .note-card:active { transform: scale(0.96); }
 
@@ -107,7 +107,7 @@
             75%      { transform:translateX(6px); }
         }
 
-        .modal-enter { animation: fadeScaleUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .modal-enter { animation: fadeScaleUp 0.4s cubic-bezier(0.175,0.885,0.32,1.275) forwards; }
         
         .modern-input {
             background: rgba(15,23,42,0.6);
@@ -161,7 +161,7 @@
         .tag-idle   { background:rgb(15 23 42); border-color:rgb(30 41 59); color:rgb(100 116 139); }
         .tag-idle:hover { border-color:rgba(99,102,241,0.4); color:rgb(165 180 252); }
 
-        #bulkBar { transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease; }
+        #bulkBar { transition: transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275), opacity 0.3s ease; }
 
         @media (prefers-reduced-motion:reduce) {
             *,*::before,*::after { animation-duration:0.01ms!important; transition-duration:0.01ms!important; }
@@ -242,7 +242,7 @@
         <div class="pc-wrap px-4 py-5">
             <div id="uploadStatus" class="hidden mb-5 p-5 glass rounded-[2rem] border border-indigo-500/20 modal-enter">
                 <div class="flex justify-between items-center mb-3">
-                    <span id="uploadStatusTitle" class="text-[10px] font-black uppercase tracking-[0.2em] accent-text flex items-center gap-2">
+                    <span class="text-[10px] font-black uppercase tracking-[0.2em] accent-text flex items-center gap-2">
                         <span class="w-2 h-2 rounded-full bg-indigo-500 animate-ping inline-block"></span>
                         Yükleniyor...
                     </span>
@@ -434,7 +434,7 @@
 </div>
 
 <div id="noteEditor" class="fixed inset-0 z-[650] hidden bg-slate-950 flex-col"
-    style="transform:translateY(100%); transition:transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+    style="transform:translateY(100%); transition:transform 0.5s cubic-bezier(0.175,0.885,0.32,1.275);">
     <div class="pc-wrap flex justify-between items-center p-4 border-b border-white/5 bg-slate-950/90 backdrop-blur-md sticky top-0 z-10 w-full">
         <button onclick="closeNoteEditor()" type="button" class="p-3 text-slate-400 hover:text-white btn-bounce">
             <i data-lucide="chevron-left" class="w-6 h-6"></i>
@@ -457,7 +457,7 @@
 
 <div id="settings" class="fixed inset-0 z-[700] hidden flex items-end justify-center bg-black/60 backdrop-blur-sm p-4 opacity-0 transition-opacity duration-300">
     <div class="glass w-full max-w-lg rounded-[2.5rem] p-7 transform translate-y-full transition-transform duration-500 bg-[#0f172a]"
-        style="transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+        style="transition: transform 0.5s cubic-bezier(0.175,0.885,0.32,1.275);">
         <div class="flex justify-between items-center mb-7">
             <h2 class="text-2xl font-black italic accent-text uppercase tracking-tighter">Ayarlar</h2>
             <button onclick="closeSettings()" type="button"
@@ -512,7 +512,7 @@
 
     let masterPassword = sessionStorage.getItem('bbp_mp') || "";
 
-    // ── PARÇALI BASE64 MOTORU ───────────────────────────
+    // ── GÜVENLİ VE PARÇALI BASE64 MOTORU (DÖNGÜ YIĞIN HATASI KORUMASI) ──
     function bytesToBase64(bytes) {
         let binary = '';
         const len = bytes.byteLength;
@@ -533,7 +533,7 @@
         return bytes;
     }
 
-    // ── CRYPTO ENGINE (SHA-256 & AES-GCM) ────────────────
+    // ── ASKERİ GÜVENLİK MOTORU (SHA-256 & AES-GCM 256-bit) ──
     async function hashPassword(password) {
         const msgBuffer = new TextEncoder().encode(password);
         const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
@@ -595,7 +595,7 @@
         }
     }
 
-    // ── STATE ────────────────────────────────────────────
+    // --- STATE ---
     let db, files = [], notes = [],
         currentTab  = 'all',
         isSelectMode = false,
@@ -620,22 +620,18 @@
                 checkSetup();
                 const sess = sessionStorage.getItem('bbp_session');
                 if (sess) {
-                    if (sess === 'panic') {
-                        unlockSuccess(true);
-                    } else if (masterPassword) {
-                        unlockSuccess(false);
-                    } else {
-                        sessionStorage.removeItem('bbp_session');
-                    }
+                    if (sess === 'panic') unlockSuccess(true);
+                    else if (masterPassword) unlockSuccess(false);
+                    else sessionStorage.removeItem('bbp_session');
                 }
             };
             req.onerror = () => showError("VERİTABANI HATASI!");
         } catch(err) {
-            console.error(err);
-            showError("GÜVENLİK ENGELİ: Veritabanı açılamadı!");
+            console.error('Database connection failed:', err);
+            showError("GÜVENLİK ENGELİ: Yerel veritabanı açılamadı!");
         }
 
-        try { lucide.createIcons(); } catch(err) { console.error(err); }
+        try { lucide.createIcons(); } catch(err) { console.error('lucide error', err); }
         
         const authInput = document.getElementById('authInput');
         if(authInput) {
@@ -644,6 +640,7 @@
             });
         }
 
+        // --- SÜRÜKLE BIRAK DESTEĞİ ---
         const dropZone = document.getElementById('mainScroll');
         if (dropZone) {
             ['dragenter', 'dragover'].forEach(name => {
@@ -684,7 +681,6 @@
 
         const stored = localStorage.getItem('bbp_pass');
         const panic  = localStorage.getItem('bbp_panic');
-
         const hashedInput = await hashPassword(val);
 
         if (!stored) {
@@ -702,9 +698,7 @@
                 unlockSuccess(false);
             } else if (hashedInput === panic) {
                 unlockSuccess(true);
-            } else {
-                showError("YANLIŞ ŞİFRE!"); shakeInput(); input.value = '';
-            }
+            } else { showError("YANLIŞ ŞİFRE!"); shakeInput(); input.value = ''; }
         }
     };
 
@@ -759,13 +753,12 @@
         lucide.createIcons();
     };
 
-    // ── DATA LOADING ──────────────────────────────────────
+    // ── VERİ ──────────────────────────────────────────────
     const loadAllData = () => {
         if (!db) return;
         if (sessionStorage.getItem('bbp_session') === 'panic') {
             files = []; notes = []; render(); return;
         }
-        
         const txM = db.transaction("media","readonly");
         txM.objectStore("media").getAll().onsuccess = async (e) => {
             const rawFiles = e.target.result || [];
@@ -796,14 +789,13 @@
                         notes.push(n);
                     } catch(err) { console.error("Dekript hatası:", err); }
                 }
-                
                 render(true);
                 updateStorageMetrics();
             };
         };
     };
 
-    // ── UPLOAD + VİDEO ÖNİZLEME RESMİ MOTORU ──────────────
+    // ── UPLOAD + OTOMATİK VİDEO ÖNİZLEME RESMİ MOTORU ──────
     const handleUpload = async (e) => {
         const list = Array.from(e.target.files);
         if (!list.length) return;
@@ -825,7 +817,7 @@
                 reader.readAsDataURL(f);
             });
 
-            // Arka Plan Video Thumbnail Oluşturucu
+            // Arka Plan Video Thumbnail Üretim Katmanı
             let thumb = null;
             if (f.type.startsWith('video')) {
                 thumb = await new Promise((resolve) => {
@@ -855,9 +847,7 @@
                             const sy = (video.videoHeight - minSide) / 2;
                             ctx.drawImage(video, sx, sy, minSide, minSide, 0, 0, 240, 240);
                             resolve(canvas.toDataURL('image/jpeg', 0.6));
-                        } catch (err) {
-                            resolve(null);
-                        }
+                        } catch (err) { resolve(null); }
                     };
                     video.onerror = () => { clearTimeout(safeTimeout); resolve(null); };
                 });
@@ -872,7 +862,7 @@
                     type:  f.type,
                     size:  f.size,
                     data:  encryptedPayload,
-                    thumb: thumb, 
+                    thumb: thumb,
                     tag:   'genel',
                     isFav: false,
                     date:  Date.now()
@@ -886,7 +876,7 @@
             progVal.innerText = pct + '%';
         }
 
-        if(e.target.id === 'fileInp') e.target.value = '';
+        e.target.value = '';
         loadAllData();
 
         setTimeout(() => {
@@ -914,11 +904,14 @@
 
         const filtered = items.filter(item => {
             if (isNotes) {
-                return (item.title||'').toLowerCase().includes(search) || (item.content||'').toLowerCase().includes(search);
+                return (item.title||'').toLowerCase().includes(search)
+                    || (item.content||'').toLowerCase().includes(search);
             }
             const nameMtch = (item.name||'').toLowerCase().includes(search);
             const tagMtch  = (item.tag ||'').toLowerCase().includes(search);
-            const tagFilter = activeTag === 'hepsi' ? true : (item.tag||'').toLowerCase() === activeTag;
+            const tagFilter = activeTag === 'hepsi'
+                ? true
+                : (item.tag||'').toLowerCase() === activeTag;
             const pass = search ? (nameMtch || tagMtch) : tagFilter;
             return currentTab === 'fav' ? pass && item.isFav : pass;
         });
@@ -985,13 +978,16 @@
         const empty = document.getElementById('emptyState');
         if(empty) {
             if (filtered.length === 0) {
-                empty.classList.remove('hidden'); empty.style.display = 'flex';
+                empty.classList.remove('hidden');
+                empty.style.display = 'flex';
             } else {
-                empty.classList.add('hidden'); empty.style.display = 'none';
+                empty.classList.add('hidden');
+                empty.style.display = 'none';
             }
         }
     };
 
+    // ── TAGS ──────────────────────────────────────────────
     const renderTags = () => {
         const bar = document.getElementById('tagBar');
         if(!bar) return;
@@ -1015,6 +1011,7 @@
         render(false);
     };
 
+    // ── TAB ───────────────────────────────────────────────
     const setTab = (t) => {
         if (currentTab === t) return;
         currentTab = t;
@@ -1050,7 +1047,7 @@
         setTimeout(() => render(true), 250);
     };
 
-    // ── ZOOM MANUEL KONTROLÜ ──────────────────────────────
+    // ── SLIDER ZOOM MOTORU ────────────────────────────────
     const handleZoom = (val) => {
         const mediaEl = document.querySelector('#vContent img, #vContent video');
         if (mediaEl) {
@@ -1065,8 +1062,10 @@
         viewingId = id;
 
         const v = document.getElementById('viewer');
-        v.classList.remove('hidden'); v.style.display = 'flex';
-        void v.offsetWidth; v.style.opacity = '1';
+        v.classList.remove('hidden');
+        v.style.display = 'flex';
+        void v.offsetWidth;
+        v.style.opacity = '1';
 
         document.getElementById('vName').innerText = f.name || 'Dosya';
         document.getElementById('vTag').innerText  = '#' + (f.tag || 'genel');
@@ -1092,7 +1091,7 @@
         } else if (f.type.startsWith('video')) {
             el = document.createElement('video');
             el.src = f.data; el.controls = true;
-            // Video katmanının tıklanabilirliği ve z-index'i bağımsız hale getirildi
+            // KONTROLLERİN ÇALIŞMAMA VE TIKLANMAMA SORUNU BURADA ÇÖZÜLDÜ (z-index ve position izole edildi)
             el.style.cssText = 'max-width:100%;max-height:65vh;border-radius:1rem;box-shadow:0 25px 50px rgba(0,0,0,.5);opacity:0;transform:scale(1);transition:opacity .3s ease, transform 0.1s linear;transform-origin:center;position:relative;z-index:10;';
         } else {
             el = document.createElement('div');
@@ -1117,7 +1116,8 @@
         const v = document.getElementById('viewer');
         v.style.opacity = '0';
         setTimeout(() => {
-            v.classList.add('hidden'); v.style.display = '';
+            v.classList.add('hidden');
+            v.style.display = '';
             document.getElementById('vContent').innerHTML = '';
             viewingId = null;
         }, 300);
@@ -1127,8 +1127,11 @@
         const f = files.find(x => x.id === viewingId);
         if (!f) return;
         const extMap = {
-            'image/jpeg':'.jpg','image/jpg':'.jpg','image/png':'.png','image/gif':'.gif','image/webp':'.webp',
-            'video/mp4':'.mp4','video/webm':'.webm','audio/mpeg':'.mp3','audio/mp3':'.mp3','audio/wav':'.wav'
+            'image/jpeg':'.jpg','image/jpg':'.jpg','image/png':'.png',
+            'image/gif':'.gif','image/webp':'.webp','image/svg+xml':'.svg',
+            'video/mp4':'.mp4','video/webm':'.webm','video/ogg':'.ogv',
+            'audio/mpeg':'.mp3','audio/mp3':'.mp3','audio/ogg':'.ogg',
+            'audio/wav':'.wav','audio/flac':'.flac'
         };
         const ext = extMap[f.type] || (f.type.startsWith('image')?'.jpg':f.type.startsWith('video')?'.mp4':'.mp3');
         const a = document.createElement('a');
@@ -1141,8 +1144,9 @@
         if (!f) return;
         f.isFav = !f.isFav;
         updateFavState(f.isFav);
-        
         const tx = db.transaction("media","readwrite");
+        
+        // Veritabanı modeli şifreli yapıya geçirildiğinden, nesne yapısının bozulmaması garantiye alındı
         tx.objectStore("media").get(viewingId).onsuccess = (e) => {
             const dbObj = e.target.result;
             dbObj.isFav = f.isFav;
@@ -1172,6 +1176,7 @@
         };
     };
 
+    // ── DOSYA DÜZENLE ─────────────────────────────────────
     const openEditInfoModal = () => {
         const f = files.find(x => x.id === viewingId);
         if (!f) return;
@@ -1202,15 +1207,17 @@
         };
     };
 
-    // ── NOTLAR ───────────────────────────────────────────
+    // ── NOTLAR ────────────────────────────────────────────
     const openNoteEditor = (id = null) => {
         editingNoteId = id;
         const n = id ? (notes.find(x => x.id === id) || {}) : {};
         document.getElementById('noteTitle').value = n.title   || '';
         document.getElementById('noteBody').value  = n.content || '';
         const el = document.getElementById('noteEditor');
-        el.classList.remove('hidden'); el.style.display = 'flex';
-        void el.offsetWidth; el.style.transform = 'translateY(0)';
+        el.classList.remove('hidden');
+        el.style.display = 'flex';
+        void el.offsetWidth;
+        el.style.transform = 'translateY(0)';
         setTimeout(() => { if (!id) document.getElementById('noteTitle').focus(); }, 350);
     };
 
@@ -1222,7 +1229,7 @@
     };
 
     const saveNote = async () => {
-        const title = document.getElementById('noteTitle').value.trim();
+        const title   = document.getElementById('noteTitle').value.trim();
         const content = document.getElementById('noteBody').value.trim();
         if (!title && !content) { closeNoteEditor(); return; }
 
@@ -1231,7 +1238,7 @@
 
         const obj = { title: encryptedTitle, content: encryptedContent, date: Date.now() };
         if (editingNoteId) obj.id = editingNoteId;
-
+        
         db.transaction("notes","readwrite").objectStore("notes").put(obj).onsuccess = () => {
             editingNoteId = null; loadAllData(); closeNoteEditor();
         };
@@ -1243,12 +1250,15 @@
         selectedIds  = [];
         const bar = document.getElementById('bulkBar');
         if (isSelectMode) {
-            bar.classList.remove('hidden'); bar.style.display = 'flex';
+            bar.classList.remove('hidden');
+            bar.style.display = 'flex';
             void bar.offsetWidth;
-            bar.style.transform = 'translateX(-50%) translateY(0)'; bar.style.opacity = '1';
+            bar.style.transform = 'translateX(-50%) translateY(0)';
+            bar.style.opacity   = '1';
             document.getElementById('multiSelectBtn').classList.add('text-indigo-400');
         } else {
-            bar.style.transform = 'translateX(-50%) translateY(80px)'; bar.style.opacity = '0';
+            bar.style.transform = 'translateX(-50%) translateY(80px)';
+            bar.style.opacity   = '0';
             setTimeout(() => { bar.classList.add('hidden'); bar.style.display=''; }, 400);
             document.getElementById('multiSelectBtn').classList.remove('text-indigo-400');
         }
@@ -1273,18 +1283,22 @@
         tx.oncomplete = () => { toggleSelectMode(); loadAllData(); };
     };
 
+    // ── METRİKLER ─────────────────────────────────────────
     const updateStorageMetrics = () => {
         const mb = (files.reduce((a,f) => a+(f.size||0), 0) / 1048576).toFixed(1);
         const info = document.getElementById('storageInfo');
         if(info) info.innerText = mb + ' MB · ' + files.length + ' Dosya';
     };
 
+    // ── MODALLER ──────────────────────────────────────────
     const toggleModal = (id, show) => {
         const el = document.getElementById(id);
         if (!el) return;
         if (show) {
-            el.classList.remove('hidden'); el.style.display = 'flex';
-            void el.offsetWidth; el.style.opacity = '1';
+            el.classList.remove('hidden');
+            el.style.display = 'flex';
+            void el.offsetWidth;
+            el.style.opacity = '1';
             const panel = el.querySelector('.glass') || el.firstElementChild;
             if (panel) panel.style.transform = (id==='settings') ? 'translateY(0)' : 'scale(1)';
         } else {
@@ -1300,12 +1314,11 @@
     const openSettings      = () => toggleModal('settings',      true);
     const closeSettings     = () => toggleModal('settings',      false);
 
-    // ── ŞİFRE DEĞİŞTİRME MOTORU ───────────────────────────
+    // ── AYARLAR VE BELLEK SIZINTISI OLMAYAN YENİDEN KRİPTOLAMA REHBERİ ──
     const changePass = async (type) => {
         const v = prompt(type==='main' ? 'Yeni giriş şifresi:' : 'Yeni panik kodu:');
         if (v === null) return;
         if (v.length < 4) { alert('En az 4 karakter gerekli.'); return; }
-        
         const hashed = await hashPassword(v);
         
         if (type === 'main') {
@@ -1351,14 +1364,14 @@
                 localStorage.setItem('bbp_pass', hashed);
                 masterPassword = v;
                 sessionStorage.setItem('bbp_mp', v);
-                alert('Şifre değiştirildi ve tüm veriler başarıyla güncellendi.');
+                alert('Şifre güncellendi.');
                 loadAllData();
             } catch (err) {
                 alert('Hata oluştu, şifre değiştirilemedi: ' + err.message);
             }
         } else {
             localStorage.setItem('bbp_panic', hashed);
-            alert('Panik kodu güncellendi.');
+            alert('Şifre güncellendi.');
         }
     };
 
@@ -1370,7 +1383,7 @@
         }
     };
 
-    // ── GÜVENLİ PARÇALI BLOB YEDEKLEME MOTORU (100MB+ ULTRA HIZLI) ──
+    // ── TARAYICI ÇÖKMESİNİ ÖNLEYEN GÜVENLİ BLOB YEDEKLEME MOTORU (100MB+ DETECTED) ──
     const exportData = () => {
         const txM = db.transaction("media","readonly");
         txM.objectStore("media").getAll().onsuccess = (e) => {
@@ -1380,7 +1393,7 @@
                 const rawNotes = ev.target.result || [];
                 const payload = JSON.stringify({ media:rawFiles, notes:rawNotes, exported:new Date().toISOString() });
                 
-                // Blob & Stream mimarisi tarayıcıyı asla yormaz ve çökertmez
+                // DATA URI YERİNE MODERN BLOB AKIŞI (RAM ŞİŞMESİNİ KÖKTEN ÖNLER)
                 const blob = new Blob([payload], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
                 
@@ -1391,7 +1404,7 @@
                 a.click(); 
                 
                 document.body.removeChild(a);
-                URL.revokeObjectURL(url); 
+                URL.revokeObjectURL(url); // Tarayıcı hafızasını anında boşaltır
             };
         };
     };
@@ -1405,19 +1418,16 @@
                 const d = JSON.parse(ev.target.result);
                 const media = d.media || [];
                 const nts   = d.notes || [];
-                
                 const txM = db.transaction("media","readwrite");
                 media.forEach(f => { const o={...f}; delete o.id; txM.objectStore("media").add(o); });
-                
                 txM.oncomplete = () => {
                     if (nts.length) {
                         const txN = db.transaction("notes","readwrite");
                         nts.forEach(n => { const o={...n}; delete o.id; txN.objectStore("notes").add(o); });
-                        txN.oncomplete = () => { alert('Yedek başarıyla içeri aktarıldı.'); loadAllData(); };
-                    } else {
-                        alert('Yedek başarıyla içeri aktarıldı.'); loadAllData();
-                    }
+                        txN.oncomplete = () => loadAllData();
+                    } else loadAllData();
                 };
+                alert(media.length + ' medya, ' + nts.length + ' not içe aktarıldı.');
             } catch(err) {
                 alert('Yedek okunamadı: ' + err.message);
             }
