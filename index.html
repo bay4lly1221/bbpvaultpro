@@ -85,7 +85,7 @@
             height:160px; display:flex; flex-direction:column;
             opacity:0; cursor:pointer;
             animation: slideInRight 0.5s cubic-bezier(0.4,0,0.2,1) forwards;
-            transition: transform 0.3s cubic-bezier(0.175,0.885,0.32,1.275), border-color 0.3s ease;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s ease;
         }
         .note-card:active { transform: scale(0.96); }
 
@@ -354,15 +354,15 @@
         </div>
     </div>
 
+    <div id="zoomContainer" class="absolute top-24 left-1/2 -translate-x-1/2 z-[620] flex items-center justify-center gap-3 max-w-xs w-64 text-slate-400 bg-slate-900/80 backdrop-blur-md py-2 px-4 rounded-full border border-white/10 hidden">
+        <i data-lucide="zoom-out" class="w-4 h-4"></i>
+        <input type="range" id="zoomSlider" min="1" max="4" step="0.05" value="1" oninput="handleZoom(this.value)" class="w-full accent-indigo-500 h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer">
+        <i data-lucide="zoom-in" class="w-4 h-4"></i>
+    </div>
+
     <div id="vContent" class="flex-1 flex items-center justify-center p-4 overflow-hidden"></div>
 
-    <div class="absolute bottom-0 left-0 right-0 p-6 pb-10 bg-gradient-to-t from-black via-black/70 to-transparent text-center">
-        <div id="zoomContainer" class="flex items-center justify-center gap-3 mb-4 max-w-xs mx-auto text-slate-400 bg-slate-900/60 backdrop-blur-md py-2 px-4 rounded-full border border-white/5 hidden">
-            <i data-lucide="zoom-out" class="w-4 h-4"></i>
-            <input type="range" id="zoomSlider" min="1" max="4" step="0.05" value="1" oninput="handleZoom(this.value)" class="w-full accent-indigo-500 h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer">
-            <i data-lucide="zoom-in" class="w-4 h-4"></i>
-        </div>
-        
+    <div class="absolute bottom-0 left-0 right-0 p-6 pb-10 bg-gradient-to-t from-black via-black/70 to-transparent text-center z-50">
         <h3 id="vName" class="text-xl font-black truncate italic uppercase tracking-tight text-white drop-shadow-lg"></h3>
         <div class="flex justify-center gap-3 mt-2">
             <span id="vTag" class="text-[10px] accent-bg text-white px-4 py-1.5 rounded-full font-black uppercase tracking-widest"></span>
@@ -434,7 +434,7 @@
 </div>
 
 <div id="noteEditor" class="fixed inset-0 z-[650] hidden bg-slate-950 flex-col"
-    style="transform:translateY(100%); transition:transform 0.5s cubic-bezier(0.175,0.885,0.32,1.275);">
+    style="transform:translateY(100%); transition:transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
     <div class="pc-wrap flex justify-between items-center p-4 border-b border-white/5 bg-slate-950/90 backdrop-blur-md sticky top-0 z-10 w-full">
         <button onclick="closeNoteEditor()" type="button" class="p-3 text-slate-400 hover:text-white btn-bounce">
             <i data-lucide="chevron-left" class="w-6 h-6"></i>
@@ -457,7 +457,7 @@
 
 <div id="settings" class="fixed inset-0 z-[700] hidden flex items-end justify-center bg-black/60 backdrop-blur-sm p-4 opacity-0 transition-opacity duration-300">
     <div class="glass w-full max-w-lg rounded-[2.5rem] p-7 transform translate-y-full transition-transform duration-500 bg-[#0f172a]"
-        style="transition: transform 0.5s cubic-bezier(0.175,0.885,0.32,1.275);">
+        style="transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
         <div class="flex justify-between items-center mb-7">
             <h2 class="text-2xl font-black italic accent-text uppercase tracking-tighter">Ayarlar</h2>
             <button onclick="closeSettings()" type="button"
@@ -512,11 +512,11 @@
 
     let masterPassword = sessionStorage.getItem('bbp_mp') || "";
 
-    // ── GÜVENLİ PARÇALI BASE64 MOTORU (BUG FIX) ────────────
+    // ── PARÇALI BASE64 MOTORU ───────────────────────────
     function bytesToBase64(bytes) {
         let binary = '';
         const len = bytes.byteLength;
-        const chunk = 16384; // 16KB güvenli döngü blokları (RangeError koruması)
+        const chunk = 16384; 
         for (let i = 0; i < len; i += chunk) {
             binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));
         }
@@ -803,7 +803,7 @@
         };
     };
 
-    // ── UPLOAD ────────────────────────────────────────────
+    // ── UPLOAD + AUTOMATIC VIDEO THUMBNAIL GENERATOR ──────
     const handleUpload = async (e) => {
         const list = Array.from(e.target.files);
         if (!list.length) return;
@@ -825,6 +825,46 @@
                 reader.readAsDataURL(f);
             });
 
+            // Gelişmiş Video Thumbnail Oluşturma Motoru
+            let thumb = null;
+            if (f.type.startsWith('video')) {
+                thumb = await new Promise((resolve) => {
+                    const video = document.createElement('video');
+                    video.src = data;
+                    video.preload = 'metadata';
+                    video.muted = true;
+                    video.playsInline = true;
+                    
+                    // Zaman aşımı koruması (Büyük dosyalarda takılmayı önler)
+                    let safeTimeout = setTimeout(() => {
+                        video.onseeked = null;
+                        resolve(null);
+                    }, 4000);
+
+                    video.onloadeddata = () => {
+                        video.currentTime = Math.min(1, video.duration / 2 || 1);
+                    };
+                    video.onseeked = () => {
+                        clearTimeout(safeTimeout);
+                        try {
+                            const canvas = document.createElement('canvas');
+                            canvas.width = 240;
+                            canvas.height = 240;
+                            const ctx = canvas.getContext('2d');
+                            // Kareyi merkeze kırparak çizme (Kusursuz kare görünüm)
+                            const minSide = Math.min(video.videoWidth, video.videoHeight);
+                            const sx = (video.videoWidth - minSide) / 2;
+                            const sy = (video.videoHeight - minSide) / 2;
+                            ctx.drawImage(video, sx, sy, minSide, minSide, 0, 0, 240, 240);
+                            resolve(canvas.toDataURL('image/jpeg', 0.6));
+                        } catch (err) {
+                            resolve(null);
+                        }
+                    };
+                    video.onerror = () => { clearTimeout(safeTimeout); resolve(null); };
+                });
+            }
+
             const encryptedPayload = await encryptData(data, masterPassword);
 
             await new Promise((res) => {
@@ -834,6 +874,7 @@
                     type:  f.type,
                     size:  f.size,
                     data:  encryptedPayload,
+                    thumb: thumb, // Thumbnail veritabanına ekleniyor
                     tag:   'genel',
                     isFav: false,
                     date:  Date.now()
@@ -910,9 +951,17 @@
                 if (item.type.startsWith('image')) {
                     inner = `<img src="${item.data}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">`;
                 } else if (item.type.startsWith('video')) {
-                    inner = `<div class="w-full h-full bg-slate-900 flex flex-col items-center justify-center gap-2 group-hover:bg-slate-800 transition-colors">
-                        <i data-lucide="play-circle" class="w-10 h-10 accent-text group-hover:scale-125 transition-transform duration-300"></i>
-                        <span class="text-[9px] text-slate-600 font-bold uppercase">Video</span></div>`;
+                    // Eğer kapak resmi üretildiyse göster, yoksa eski güvenli ikona düş
+                    if (item.thumb) {
+                        inner = `<img src="${item.thumb}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+                                 <div class="absolute inset-0 flex items-center justify-center bg-black/30">
+                                    <i data-lucide="play-circle" class="w-10 h-10 text-white drop-shadow-lg group-hover:scale-125 transition-transform duration-300"></i>
+                                 </div>`;
+                    } else {
+                        inner = `<div class="w-full h-full bg-slate-900 flex flex-col items-center justify-center gap-2 group-hover:bg-slate-800 transition-colors">
+                            <i data-lucide="play-circle" class="w-10 h-10 accent-text group-hover:scale-125 transition-transform duration-300"></i>
+                            <span class="text-[9px] text-slate-600 font-bold uppercase">Video</span></div>`;
+                    }
                 } else {
                     inner = `<div class="w-full h-full bg-slate-900 flex flex-col items-center justify-center gap-2 group-hover:bg-slate-800 transition-colors">
                         <i data-lucide="music" class="w-10 h-10 accent-text group-hover:scale-125 transition-transform duration-300"></i>
@@ -1004,7 +1053,7 @@
         setTimeout(() => render(true), 250);
     };
 
-    // ── SLIDER ZOOM FONKSİYONU ────────────────────────────
+    // ── ZOOM ENGINE ───────────────────────────────────────
     const handleZoom = (val) => {
         const mediaEl = document.querySelector('#vContent img, #vContent video');
         if (mediaEl) {
@@ -1026,7 +1075,6 @@
         document.getElementById('vTag').innerText  = '#' + (f.tag || 'genel');
         document.getElementById('vDate').innerText = new Date(f.date).toLocaleDateString('tr-TR');
 
-        // Zoom Slider'ı sıfırla ve ses dosyalarında gizle
         const zoomSlider = document.getElementById('zoomSlider');
         if (zoomSlider) zoomSlider.value = 1;
         
@@ -1047,7 +1095,8 @@
         } else if (f.type.startsWith('video')) {
             el = document.createElement('video');
             el.src = f.data; el.controls = true;
-            el.style.cssText = 'max-width:100%;max-height:65vh;border-radius:1rem;box-shadow:0 25px 50px rgba(0,0,0,.5);opacity:0;transform:scale(1);transition:opacity .3s ease, transform 0.1s linear;transform-origin:center;';
+            // Bug Fix: Video elementinin kendi kontrollerinin tıklanabilir kalması için z-index ayarı yapıldı
+            el.style.cssText = 'max-width:100%;max-height:65vh;border-radius:1rem;box-shadow:0 25px 50px rgba(0,0,0,.5);opacity:0;transform:scale(1);transition:opacity .3s ease, transform 0.1s linear;transform-origin:center;position:relative;z-index:10;';
         } else {
             el = document.createElement('div');
             el.style.cssText = 'padding:2.5rem;display:flex;flex-direction:column;align-items:center;gap:1rem;opacity:0;transform:scale(0.95);transition:all .4s cubic-bezier(0.175,0.885,0.32,1.275);';
@@ -1254,7 +1303,7 @@
     const openSettings      = () => toggleModal('settings',      true);
     const closeSettings     = () => toggleModal('settings',      false);
 
-    // ── ŞİFRE DEĞİŞTİRME & RE-ENCRYPTION ENGINE ───────────
+    // ── ŞİFRE DEĞİŞTİRME ENGINE ───────────────────────────
     const changePass = async (type) => {
         const v = prompt(type==='main' ? 'Yeni giriş şifresi:' : 'Yeni panik kodu:');
         if (v === null) return;
@@ -1324,7 +1373,7 @@
         }
     };
 
-    // ── YEDEKLEME (EXPORT / IMPORT) ───────────────────────
+    // ── GÜVENLİ PARÇALI YEDEKLEME MOTORU (BLOB ENTEGRASYONU) ──
     const exportData = () => {
         const txM = db.transaction("media","readonly");
         txM.objectStore("media").getAll().onsuccess = (e) => {
@@ -1333,10 +1382,20 @@
             txN.objectStore("notes").getAll().onsuccess = (ev) => {
                 const rawNotes = ev.target.result || [];
                 const payload = JSON.stringify({ media:rawFiles, notes:rawNotes, exported:new Date().toISOString() });
+                
+                // BUG FIX: Belleği şişirmeyen, tarayıcıyı çökertmeyen "Blob" akışı
+                const blob = new Blob([payload], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                
                 const a = document.createElement('a');
-                a.href = 'data:text/json;charset=utf-8,' + encodeURIComponent(payload);
+                a.href = url; 
                 a.download = 'vault_backup_' + new Date().toISOString().slice(0,10) + '.json';
-                document.body.appendChild(a); a.click(); document.body.removeChild(a);
+                document.body.appendChild(a); 
+                a.click(); 
+                
+                // RAM'i anında boşaltıp tarayıcıyı rahatlatıyoruz
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url); 
             };
         };
     };
