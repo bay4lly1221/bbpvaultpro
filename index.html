@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>BBP VAULT | v1.0</title>
+    <title>BBP VAULT | v1.0 PRO</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -24,16 +24,13 @@
             margin: 0; padding: 0;
         }
 
-        /* BUG FIX: Tailwind yüklenmezse veya geç yüklenirse gizli elementlerin ekranı kaplamasını engeller */
         .hidden { display: none !important; }
 
-        /* BUG FIX: Giriş ekranının tıklanabilirliğini ve en üstte olmasını garanti eder */
         #authScreen { 
             height: 100dvh; 
             pointer-events: auto !important;
         }
 
-        /* App tam ekran flex layout */
         #app {
             height: 100dvh;
             display: flex;
@@ -129,10 +126,8 @@
             transform: scale(1.01);
         }
 
-        /* PC container */
         .pc-wrap { max-width: 900px; margin: 0 auto; width: 100%; }
 
-        /* Galeri - responsive */
         #galleryGrid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
@@ -151,31 +146,23 @@
             #galleryGrid { grid-template-columns: repeat(auto-fill, minmax(190px,1fr)); gap:16px; }
         }
 
-        /* Ana scroll */
         #mainScroll {
             flex: 1;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
+            transition: background-color 0.3s ease;
         }
 
-        /* Nav safe area */
         nav { padding-bottom: calc(0.75rem + env(safe-area-inset-bottom,0px)); }
-
-        /* Viewer */
         #viewer { display:flex; flex-direction:column; }
-
-        /* Note editor */
         #noteEditor { display:flex; flex-direction:column; }
 
-        /* Tag pilleri */
         .tag-active { background:var(--accent); color:white; border-color:var(--accent); box-shadow:0 4px 15px -4px rgba(99,102,241,0.5); }
         .tag-idle   { background:rgb(15 23 42); border-color:rgb(30 41 59); color:rgb(100 116 139); }
         .tag-idle:hover { border-color:rgba(99,102,241,0.4); color:rgb(165 180 252); }
 
-        /* Bulk bar */
         #bulkBar { transition: transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275), opacity 0.3s ease; }
 
-        /* Reduced motion */
         @media (prefers-reduced-motion:reduce) {
             *,*::before,*::after { animation-duration:0.01ms!important; transition-duration:0.01ms!important; }
         }
@@ -192,7 +179,7 @@
         <h1 id="authTitle" class="text-4xl font-black mb-2 italic tracking-tighter uppercase">
             Vault <span class="accent-text text-2xl">v1.0</span>
         </h1>
-        <p class="text-slate-500 text-[10px] mb-10 uppercase tracking-[0.4em] font-bold">Güvenli Erişim</p>
+        <p class="text-slate-500 text-[10px] mb-10 uppercase tracking-[0.4em] font-bold">ASKERİ DÜZEY AES-256 KORUMA</p>
         
         <div class="space-y-4">
             <div class="relative group" id="authInputWrap">
@@ -215,7 +202,6 @@
 </div>
 
 <div id="app" class="hidden opacity-0 transition-opacity duration-700">
-
     <header class="bg-slate-950/90 backdrop-blur-xl z-40 border-b border-white/5 shrink-0">
         <div class="pc-wrap px-4 pt-4 pb-3">
             <div class="flex items-center justify-between mb-4">
@@ -245,7 +231,7 @@
                 <div class="relative group">
                     <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-indigo-400 transition-colors pointer-events-none"></i>
                     <input type="text" id="searchBar" oninput="handleSearch()"
-                        class="modern-input pl-11" placeholder="Kasa içinde ara...">
+                        class="modern-input pl-11" placeholder="Kasa içinde ara (AES Canlı Arama)...">
                 </div>
                 <div id="tagBar" class="flex gap-2 overflow-x-auto no-scrollbar pb-1"></div>
             </div>
@@ -254,12 +240,11 @@
 
     <main id="mainScroll" class="no-scrollbar bg-gradient-to-b from-slate-950 to-[#050b1e]">
         <div class="pc-wrap px-4 py-5">
-
             <div id="uploadStatus" class="hidden mb-5 p-5 glass rounded-[2rem] border border-indigo-500/20 modal-enter">
                 <div class="flex justify-between items-center mb-3">
-                    <span class="text-[10px] font-black uppercase tracking-[0.2em] accent-text flex items-center gap-2">
+                    <span id="uploadStatusTitle" class="text-[10px] font-black uppercase tracking-[0.2em] accent-text flex items-center gap-2">
                         <span class="w-2 h-2 rounded-full bg-indigo-500 animate-ping inline-block"></span>
-                        Yükleniyor...
+                        Şifreleniyor ve Yükleniyor...
                     </span>
                     <span id="progVal" class="text-xs font-bold text-white">0%</span>
                 </div>
@@ -278,7 +263,7 @@
                     <div class="p-2 bg-slate-800 rounded-full group-hover:bg-indigo-500/20 transition-colors">
                         <i data-lucide="plus" class="w-4 h-4"></i>
                     </div>
-                    Yeni Gizli Not
+                    Yeni Kriptolu Not
                 </button>
                 <div id="notesGrid"></div>
             </div>
@@ -288,8 +273,8 @@
                     <div class="absolute inset-0 bg-indigo-500/20 blur-2xl rounded-full"></div>
                     <i data-lucide="wind" class="w-20 h-20 relative z-10 text-slate-400"></i>
                 </div>
-                <p class="font-black text-sm uppercase tracking-widest text-slate-500">Burası şimdilik boş</p>
-                <p class="text-[10px] text-slate-600 mt-1">+ butonuna bas, içerik ekle</p>
+                <p class="font-black text-sm uppercase tracking-widest text-slate-500">Burası şimdilik güvenli ve boş</p>
+                <p class="text-[10px] text-slate-600 mt-1">+ butonuna bas veya dosyaları buraya sürükle</p>
             </div>
 
             <div class="h-28"></div>
@@ -418,7 +403,7 @@
             <i data-lucide="award" class="w-10 h-10 text-indigo-400"></i>
         </div>
         <h2 class="text-2xl font-black italic accent-text tracking-tighter uppercase mb-1 relative z-10">VAULT PRO</h2>
-        <p class="text-[10px] text-slate-500 font-bold tracking-[0.3em] mb-6 uppercase">v1.0-Stable Edition</p>
+        <p class="text-[10px] text-slate-500 font-bold tracking-[0.3em] mb-6 uppercase">v1.0 - Gelişmiş Güvenlik Sürümü</p>
         <div class="space-y-4 relative z-10">
             <div class="bg-white/5 p-4 rounded-2xl border border-white/5">
                 <p class="text-[9px] text-slate-500 font-black uppercase tracking-widest mb-2">Geliştiriciler</p>
@@ -477,11 +462,11 @@
         <div class="space-y-3 max-h-[65vh] overflow-y-auto no-scrollbar pb-2">
             <div class="p-5 bg-white/5 rounded-[1.75rem] border border-white/5">
                 <p class="text-[9px] font-black uppercase text-slate-500 mb-3 tracking-widest flex items-center gap-2">
-                    <i data-lucide="shield" class="w-3 h-3"></i> Güvenlik
+                    <i data-lucide="shield" class="w-3 h-3"></i> Güvenlik (Kripto Modu)
                 </p>
                 <button onclick="changePass('main')" type="button"
                     class="w-full flex justify-between items-center p-4 bg-slate-950 rounded-2xl text-xs font-bold mb-2 hover:bg-indigo-500/10 hover:text-indigo-400 transition-colors group">
-                    Giriş Şifresini Değiştir
+                    Giriş Şifresini Değiştir (Verileri Yeniden Şifreler)
                     <i data-lucide="key" class="w-4 h-4 text-slate-500 group-hover:text-indigo-400 transition-colors"></i>
                 </button>
                 <button onclick="changePass('panic')" type="button"
@@ -492,15 +477,15 @@
             </div>
             <div class="p-5 bg-white/5 rounded-[1.75rem] border border-white/5">
                 <p class="text-[9px] font-black uppercase text-slate-500 mb-3 tracking-widest flex items-center gap-2">
-                    <i data-lucide="database" class="w-3 h-3"></i> Veri Tabanı
+                    <i data-lucide="database" class="w-3 h-3"></i> Güvenli Veri Tabanı
                 </p>
                 <button onclick="exportData()" type="button"
                     class="w-full flex justify-between items-center p-4 bg-slate-950 rounded-2xl text-xs font-bold mb-2 hover:bg-indigo-500/10 hover:text-indigo-400 transition-colors">
-                    Yedeği Dışa Aktar (.json)
+                    Şifreli Yedeği Dışa Aktar (.json)
                     <i data-lucide="cloud-download" class="w-4 h-4 text-indigo-400"></i>
                 </button>
                 <label class="w-full flex justify-between items-center p-4 bg-slate-950 rounded-2xl text-xs font-bold cursor-pointer hover:bg-emerald-500/10 hover:text-emerald-400 transition-colors">
-                    Yedek Dosyası Yükle
+                    Şifreli Yedek Dosyası Yükle
                     <i data-lucide="cloud-upload" class="w-4 h-4 text-emerald-400"></i>
                     <input type="file" id="importInp" class="hidden" onchange="importData(event)" accept=".json">
                 </label>
@@ -518,7 +503,73 @@
     if (typeof lucide === 'undefined') {
         window.lucide = { createIcons: () => {} };
     }
-    // --- STATE ---
+
+    // --- RAM GÜVENLİK DEĞİŞKENİ ---
+    let masterPassword = sessionStorage.getItem('bbp_mp') || "";
+
+    // --- KRİPTOGRAFİ MOTORU (WEB CRYPTO API) ---
+    async function hashPassword(password) {
+        const msgBuffer = new TextEncoder().encode(password);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+        return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    async function deriveKey(password, salt) {
+        const encoder = new TextEncoder();
+        const passwordKey = await crypto.subtle.importKey(
+            "raw", encoder.encode(password), { name: "PBKDF2" }, false, ["deriveKey"]
+        );
+        return crypto.subtle.deriveKey(
+            {
+                name: "PBKDF2",
+                salt: salt,
+                iterations: 100000,
+                hash: "SHA-256"
+            },
+            passwordKey,
+            { name: "AES-GCM", length: 256 },
+            false,
+            ["encrypt", "decrypt"]
+        );
+    }
+
+    async function encryptData(plainText, password) {
+        const salt = crypto.getRandomValues(new Uint8Array(16));
+        const iv = crypto.getRandomValues(new Uint8Array(12));
+        const key = await deriveKey(password, salt);
+        
+        const encrypted = await crypto.subtle.encrypt(
+            { name: "AES-GCM", iv: iv },
+            key,
+            new TextEncoder().encode(plainText)
+        );
+
+        return {
+            ciphertext: btoa(String.fromCharCode(...new Uint8Array(encrypted))),
+            iv: btoa(String.fromCharCode(...iv)),
+            salt: btoa(String.fromCharCode(...salt))
+        };
+    }
+
+    async function decryptData(encryptedObj, password) {
+        try {
+            const salt = new Uint8Array(atob(encryptedObj.salt).split("").map(c => c.charCodeAt(0)));
+            const iv = new Uint8Array(atob(encryptedObj.iv).split("").map(c => c.charCodeAt(0)));
+            const ciphertext = new Uint8Array(atob(encryptedObj.ciphertext).split("").map(c => c.charCodeAt(0)));
+            
+            const key = await deriveKey(password, salt);
+            const decrypted = await crypto.subtle.decrypt(
+                { name: "AES-GCM", iv: iv },
+                key,
+                ciphertext
+            );
+            return new TextDecoder().decode(decrypted);
+        } catch (err) {
+            throw new Error("Şifre çözme hatası.");
+        }
+    }
+
+    // --- UYGULAMA DURUMU (STATE) ---
     let db, files = [], notes = [],
         currentTab  = 'all',
         isSelectMode = false,
@@ -527,9 +578,8 @@
         editingNoteId = null,
         activeTag    = 'hepsi';
 
-    // ── INIT ──────────────────────────────────────────────
+    // ── BAŞLANGIÇ (INIT) ──────────────────────────────────
     const init = () => {
-        // BUG FIX: IndexedDB'nin kısıtlı tarayıcı modlarında çökmesini engelleyen try-catch koruması
         try {
             const req = indexedDB.open("BBP_VAULT_FINAL", 1);
             req.onupgradeneeded = (e) => {
@@ -543,22 +593,59 @@
                 db = e.target.result;
                 checkSetup();
                 const sess = sessionStorage.getItem('bbp_session');
-                if (sess) unlockSuccess(sess === 'panic');
+                if (sess) {
+                    if (sess === 'panic') {
+                        unlockSuccess(true);
+                    } else if (masterPassword) {
+                        unlockSuccess(false);
+                    } else {
+                        sessionStorage.removeItem('bbp_session');
+                    }
+                }
             };
             req.onerror = () => showError("VERİTABANI HATASI!");
         } catch(err) {
-            console.error('Database connection failed:', err);
-            showError("GÜVENLİK ENGELİ: Yerel veritabanı açılamadı!");
+            console.error(err);
+            showError("GÜVENLİK ENGELİ: Veritabanı açılamadı!");
         }
 
-        try { lucide.createIcons(); } catch(err) { console.error('lucide error', err); }
+        try { lucide.createIcons(); } catch(err) { console.error(err); }
         
-        // Enter ile giriş
         const authInput = document.getElementById('authInput');
         if(authInput) {
             authInput.addEventListener('keydown', e => {
                 if (e.key === 'Enter') handleAuth();
             });
+        }
+
+        // --- SÜRÜKLE BIRAK ENTEGRASYONU ---
+        const dropZone = document.getElementById('mainScroll');
+        if (dropZone) {
+            ['dragenter', 'dragover'].forEach(name => {
+                dropZone.addEventListener(name, (e) => {
+                    e.preventDefault();
+                    dropZone.style.backgroundColor = "rgba(99, 102, 241, 0.05)";
+                }, false);
+            });
+
+            ['dragleave', 'drop'].forEach(name => {
+                dropZone.addEventListener(name, (e) => {
+                    e.preventDefault();
+                    dropZone.style.backgroundColor = "";
+                }, false);
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                const filesList = e.dataTransfer.files;
+                if (filesList.length && sessionStorage.getItem('bbp_session') === 'active') {
+                    handleUpload({ target: { files: filesList } });
+                }
+            });
+        }
+
+        // --- PWA SERVICE WORKER REGISTRATION ---
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(() => {});
         }
     };
 
@@ -569,8 +656,8 @@
             : 'Vault <span class="accent-text text-2xl">Kurulum</span>';
     };
 
-    // ── AUTH ──────────────────────────────────────────────
-    const handleAuth = () => {
+    // ── KİMLİK DOĞRULAMA (AUTH) ───────────────────────────
+    const handleAuth = async () => {
         const input = document.getElementById('authInput');
         const val   = input.value;
         if (!val) { shakeInput(); return; }
@@ -578,15 +665,26 @@
         const stored = localStorage.getItem('bbp_pass');
         const panic  = localStorage.getItem('bbp_panic');
 
+        const hashedInput = await hashPassword(val);
+
         if (!stored) {
             if (val.length < 4) { showError("EN AZ 4 KARAKTER GEREKLİ!"); shakeInput(); return; }
-            localStorage.setItem('bbp_pass',  btoa(val));
-            localStorage.setItem('bbp_panic', btoa('1923'));
+            const hashedPanic = await hashPassword('1923');
+            localStorage.setItem('bbp_pass',  hashedInput);
+            localStorage.setItem('bbp_panic', hashedPanic);
+            masterPassword = val;
+            sessionStorage.setItem('bbp_mp', val);
             unlockSuccess(false);
         } else {
-            if      (btoa(val) === stored) unlockSuccess(false);
-            else if (btoa(val) === panic)  unlockSuccess(true);
-            else { showError("YANLIŞ ŞİFRE!"); shakeInput(); input.value = ''; }
+            if (hashedInput === stored) {
+                masterPassword = val;
+                sessionStorage.setItem('bbp_mp', val);
+                unlockSuccess(false);
+            } else if (hashedInput === panic) {
+                unlockSuccess(true);
+            } else {
+                showError("YANLIŞ ŞİFRE!"); shakeInput(); input.value = '';
+            }
         }
     };
 
@@ -615,7 +713,7 @@
     };
 
     const lockVault = () => {
-        sessionStorage.removeItem('bbp_session');
+        sessionStorage.clear();
         location.reload();
     };
 
@@ -641,25 +739,52 @@
         lucide.createIcons();
     };
 
-    // ── VERİ ──────────────────────────────────────────────
+    // ── ASENKRON DEKRİPTOR VE VERİ YÜKLEME ────────────────
     const loadAllData = () => {
         if (!db) return;
         if (sessionStorage.getItem('bbp_session') === 'panic') {
             files = []; notes = []; render(); return;
         }
+        
         const txM = db.transaction("media","readonly");
-        txM.objectStore("media").getAll().onsuccess = (e) => {
-            files = e.target.result || [];
+        txM.objectStore("media").getAll().onsuccess = async (e) => {
+            const rawFiles = e.target.result || [];
+            files = [];
+            
+            // Canlı AES Şifre Çözümü
+            for(let f of rawFiles) {
+                try {
+                    if (typeof f.data === 'object' && f.data.ciphertext) {
+                        f.data = await decryptData(f.data, masterPassword);
+                    }
+                    files.push(f);
+                } catch(err) { console.error("Medya dekript hatası:", err); }
+            }
+
             const txN = db.transaction("notes","readonly");
-            txN.objectStore("notes").getAll().onsuccess = (ev) => {
-                notes = ev.target.result || [];
+            txN.objectStore("notes").getAll().onsuccess = async (ev) => {
+                const rawNotes = ev.target.result || [];
+                notes = [];
+                
+                for(let n of rawNotes) {
+                    try {
+                        if (typeof n.title === 'object' && n.title.ciphertext) {
+                            n.title = await decryptData(n.title, masterPassword);
+                        }
+                        if (typeof n.content === 'object' && n.content.ciphertext) {
+                            n.content = await decryptData(n.content, masterPassword);
+                        }
+                        notes.push(n);
+                    } catch(err) { console.error("Not dekript hatası:", err); }
+                }
+                
                 render(true);
                 updateStorageMetrics();
             };
         };
     };
 
-    // ── UPLOAD ────────────────────────────────────────────
+    // ── KRİPTOLU DOSYA YÜKLEME (UPLOAD) ───────────────────
     const handleUpload = async (e) => {
         const list = Array.from(e.target.files);
         if (!list.length) return;
@@ -680,13 +805,17 @@
                 reader.onerror = () => rej(new Error('Okuma hatası: ' + f.name));
                 reader.readAsDataURL(f);
             });
+
+            // AES-GCM Şifreleme katmanı tetikleniyor
+            const encryptedPayload = await encryptData(data, masterPassword);
+
             await new Promise((res) => {
                 const tx  = db.transaction("media","readwrite");
                 const obj = {
                     name:  f.name.replace(/\.[^.]+$/, ''),
                     type:  f.type,
                     size:  f.size,
-                    data,
+                    data:  encryptedPayload, // Veritabanına saf veri gitmez.
                     tag:   'genel',
                     isFav: false,
                     date:  Date.now()
@@ -700,7 +829,7 @@
             progVal.innerText = pct + '%';
         }
 
-        e.target.value = '';
+        if(e.target.id === 'fileInp') e.target.value = '';
         loadAllData();
 
         setTimeout(() => {
@@ -714,15 +843,13 @@
         }, 900);
     };
 
-    // ── RENDER ────────────────────────────────────────────
+    // ── RENDER FONKSİYONLARI ──────────────────────────────
     const esc = (s) => s ? String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : '';
 
     const render = (animate = false) => {
         const search  = document.getElementById('searchBar').value.toLowerCase().trim();
         const isNotes = currentTab === 'notes';
-        const grid    = isNotes
-            ? document.getElementById('notesGrid')
-            : document.getElementById('galleryGrid');
+        const grid    = isNotes ? document.getElementById('notesGrid') : document.getElementById('galleryGrid');
         if(!grid) return;
         grid.innerHTML = '';
 
@@ -730,14 +857,11 @@
 
         const filtered = items.filter(item => {
             if (isNotes) {
-                return (item.title||'').toLowerCase().includes(search)
-                    || (item.content||'').toLowerCase().includes(search);
+                return (item.title||'').toLowerCase().includes(search) || (item.content||'').toLowerCase().includes(search);
             }
             const nameMtch = (item.name||'').toLowerCase().includes(search);
             const tagMtch  = (item.tag ||'').toLowerCase().includes(search);
-            const tagFilter = activeTag === 'hepsi'
-                ? true
-                : (item.tag||'').toLowerCase() === activeTag;
+            const tagFilter = activeTag === 'hepsi' ? true : (item.tag||'').toLowerCase() === activeTag;
             const pass = search ? (nameMtch || tagMtch) : tagFilter;
             return currentTab === 'fav' ? pass && item.isFav : pass;
         });
@@ -797,16 +921,13 @@
         const empty = document.getElementById('emptyState');
         if(empty) {
             if (filtered.length === 0) {
-                empty.classList.remove('hidden');
-                empty.style.display = 'flex';
+                empty.classList.remove('hidden'); empty.style.display = 'flex';
             } else {
-                empty.classList.add('hidden');
-                empty.style.display = 'none';
+                empty.classList.add('hidden'); empty.style.display = 'none';
             }
         }
     };
 
-    // ── TAGS ──────────────────────────────────────────────
     const renderTags = () => {
         const bar = document.getElementById('tagBar');
         if(!bar) return;
@@ -830,7 +951,6 @@
         render(false);
     };
 
-    // ── TAB ───────────────────────────────────────────────
     const setTab = (t) => {
         if (currentTab === t) return;
         currentTab = t;
@@ -866,17 +986,15 @@
         setTimeout(() => render(true), 250);
     };
 
-    // ── VIEWER ────────────────────────────────────────────
+    // ── GÖRÜNTÜLEYİCİ (VIEWER) ────────────────────────────
     const openViewer = (id) => {
         const f = files.find(x => x.id === id);
         if (!f) return;
         viewingId = id;
 
         const v = document.getElementById('viewer');
-        v.classList.remove('hidden');
-        v.style.display = 'flex';
-        void v.offsetWidth;
-        v.style.opacity = '1';
+        v.classList.remove('hidden'); v.style.display = 'flex';
+        void v.offsetWidth; v.style.opacity = '1';
 
         document.getElementById('vName').innerText = f.name || 'Dosya';
         document.getElementById('vTag').innerText  = '#' + (f.tag || 'genel');
@@ -905,8 +1023,7 @@
 
         cnt.appendChild(el);
         setTimeout(() => {
-            el.style.opacity = '1';
-            el.style.transform = 'scale(1)';
+            el.style.opacity = '1'; el.style.transform = 'scale(1)';
             lucide.createIcons();
         }, 60);
 
@@ -917,8 +1034,7 @@
         const v = document.getElementById('viewer');
         v.style.opacity = '0';
         setTimeout(() => {
-            v.classList.add('hidden');
-            v.style.display = '';
+            v.classList.add('hidden'); v.style.display = '';
             document.getElementById('vContent').innerHTML = '';
             viewingId = null;
         }, 300);
@@ -928,11 +1044,8 @@
         const f = files.find(x => x.id === viewingId);
         if (!f) return;
         const extMap = {
-            'image/jpeg':'.jpg','image/jpg':'.jpg','image/png':'.png',
-            'image/gif':'.gif','image/webp':'.webp','image/svg+xml':'.svg',
-            'video/mp4':'.mp4','video/webm':'.webm','video/ogg':'.ogv',
-            'audio/mpeg':'.mp3','audio/mp3':'.mp3','audio/ogg':'.ogg',
-            'audio/wav':'.wav','audio/flac':'.flac'
+            'image/jpeg':'.jpg','image/jpg':'.jpg','image/png':'.png','image/gif':'.gif','image/webp':'.webp',
+            'video/mp4':'.mp4','video/webm':'.webm','audio/mpeg':'.mp3','audio/mp3':'.mp3','audio/wav':'.wav'
         };
         const ext = extMap[f.type] || (f.type.startsWith('image')?'.jpg':f.type.startsWith('video')?'.mp4':'.mp3');
         const a = document.createElement('a');
@@ -945,8 +1058,15 @@
         if (!f) return;
         f.isFav = !f.isFav;
         updateFavState(f.isFav);
+        
+        // Veritabanı güncellemesi için arka planda tekrar şifreleme tetiklemeden sadece parametre güncelliyoruz
         const tx = db.transaction("media","readwrite");
-        tx.objectStore("media").put(f).onsuccess = () => loadAllData();
+        tx.objectStore("media").get(viewingId).onsuccess = (e) => {
+            const dbObj = e.target.result;
+            dbObj.isFav = f.isFav;
+            tx.objectStore("media").put(dbObj).onsuccess = () => loadAllData();
+        };
+
         const btn = document.getElementById('vFav');
         if(btn) {
             btn.style.transform = 'scale(1.3)';
@@ -970,7 +1090,6 @@
         };
     };
 
-    // ── DOSYA DÜZENLE ─────────────────────────────────────
     const openEditInfoModal = () => {
         const f = files.find(x => x.id === viewingId);
         if (!f) return;
@@ -987,24 +1106,29 @@
         const newTag  = document.getElementById('editFileTag').value.trim().toLowerCase().replace(/\s+/g,'-') || 'genel';
         if (newName) f.name = newName;
         f.tag = newTag;
-        db.transaction("media","readwrite").objectStore("media").put(f).onsuccess = () => {
-            document.getElementById('vName').innerText = f.name;
-            document.getElementById('vTag').innerText  = '#' + f.tag;
-            loadAllData(); closeEditInfoModal();
+
+        const tx = db.transaction("media","readwrite");
+        tx.objectStore("media").get(viewingId).onsuccess = (e) => {
+            const dbObj = e.target.result;
+            dbObj.name = f.name;
+            dbObj.tag = f.tag;
+            tx.objectStore("media").put(dbObj).onsuccess = () => {
+                document.getElementById('vName').innerText = f.name;
+                document.getElementById('vTag').innerText  = '#' + f.tag;
+                loadAllData(); closeEditInfoModal();
+            };
         };
     };
 
-    // ── NOTLAR ────────────────────────────────────────────
+    // ── KRİPTOLU NOTLAR KATMANI ───────────────────────────
     const openNoteEditor = (id = null) => {
         editingNoteId = id;
         const n = id ? (notes.find(x => x.id === id) || {}) : {};
         document.getElementById('noteTitle').value = n.title   || '';
         document.getElementById('noteBody').value  = n.content || '';
         const el = document.getElementById('noteEditor');
-        el.classList.remove('hidden');
-        el.style.display = 'flex';
-        void el.offsetWidth;
-        el.style.transform = 'translateY(0)';
+        el.classList.remove('hidden'); el.style.display = 'flex';
+        void el.offsetWidth; el.style.transform = 'translateY(0)';
         setTimeout(() => { if (!id) document.getElementById('noteTitle').focus(); }, 350);
     };
 
@@ -1015,32 +1139,35 @@
         editingNoteId = null;
     };
 
-    const saveNote = () => {
+    const saveNote = async () => {
         const title   = document.getElementById('noteTitle').value.trim();
         const content = document.getElementById('noteBody').value.trim();
         if (!title && !content) { closeNoteEditor(); return; }
-        const obj = { title, content, date: Date.now() };
+
+        // Not başlığı ve içeriği AES-GCM ile ayrı ayrı şifreleniyor
+        const encryptedTitle = await encryptData(title, masterPassword);
+        const encryptedContent = await encryptData(content, masterPassword);
+
+        const obj = { title: encryptedTitle, content: encryptedContent, date: Date.now() };
         if (editingNoteId) obj.id = editingNoteId;
+
         db.transaction("notes","readwrite").objectStore("notes").put(obj).onsuccess = () => {
             editingNoteId = null; loadAllData(); closeNoteEditor();
         };
     };
 
-    // ── SEÇİM MODU ────────────────────────────────────────
+    // ── ÇOKLU SEÇİM MODU ──────────────────────────────────
     const toggleSelectMode = () => {
         isSelectMode = !isSelectMode;
         selectedIds  = [];
         const bar = document.getElementById('bulkBar');
         if (isSelectMode) {
-            bar.classList.remove('hidden');
-            bar.style.display = 'flex';
+            bar.classList.remove('hidden'); bar.style.display = 'flex';
             void bar.offsetWidth;
-            bar.style.transform = 'translateX(-50%) translateY(0)';
-            bar.style.opacity   = '1';
+            bar.style.transform = 'translateX(-50%) translateY(0)'; bar.style.opacity = '1';
             document.getElementById('multiSelectBtn').classList.add('text-indigo-400');
         } else {
-            bar.style.transform = 'translateX(-50%) translateY(80px)';
-            bar.style.opacity   = '0';
+            bar.style.transform = 'translateX(-50%) translateY(80px)'; bar.style.opacity = '0';
             setTimeout(() => { bar.classList.add('hidden'); bar.style.display=''; }, 400);
             document.getElementById('multiSelectBtn').classList.remove('text-indigo-400');
         }
@@ -1065,22 +1192,18 @@
         tx.oncomplete = () => { toggleSelectMode(); loadAllData(); };
     };
 
-    // ── METRİKLER ─────────────────────────────────────────
     const updateStorageMetrics = () => {
         const mb = (files.reduce((a,f) => a+(f.size||0), 0) / 1048576).toFixed(1);
         const info = document.getElementById('storageInfo');
-        if(info) info.innerText = mb + ' MB · ' + files.length + ' Dosya';
+        if(info) info.innerText = mb + ' MB · ' + files.length + ' Kriptolu Dosya';
     };
 
-    // ── MODALLER ──────────────────────────────────────────
     const toggleModal = (id, show) => {
         const el = document.getElementById(id);
         if (!el) return;
         if (show) {
-            el.classList.remove('hidden');
-            el.style.display = 'flex';
-            void el.offsetWidth;
-            el.style.opacity = '1';
+            el.classList.remove('hidden'); el.style.display = 'flex';
+            void el.offsetWidth; el.style.opacity = '1';
             const panel = el.querySelector('.glass') || el.firstElementChild;
             if (panel) panel.style.transform = (id==='settings') ? 'translateY(0)' : 'scale(1)';
         } else {
@@ -1096,29 +1219,80 @@
     const openSettings      = () => toggleModal('settings',      true);
     const closeSettings     = () => toggleModal('settings',      false);
 
-    // ── AYARLAR ───────────────────────────────────────────
-    const changePass = (type) => {
-        const v = prompt(type==='main' ? 'Yeni giriş şifresi:' : 'Yeni panik kodu:');
+    // ── Gelişmiş Şifre Değiştirme (RE-ENCRYPTION ENGINE) ──
+    const changePass = async (type) => {
+        const v = prompt(type==='main' ? 'Yeni giriş şifresi (En az 4 karakter):' : 'Yeni panik kodu:');
         if (v === null) return;
         if (v.length < 4) { alert('En az 4 karakter gerekli.'); return; }
-        localStorage.setItem(type==='main' ? 'bbp_pass' : 'bbp_panic', btoa(v));
-        alert('Şifre güncellendi.');
+        
+        const hashed = await hashPassword(v);
+        
+        if (type === 'main') {
+            // VERİ TABANINI YENİDEN ŞİFRELEME (RE-KEYING)
+            // Bellekteki ham veriyi alıp yeni türetilen anahtarla baştan paketler
+            try {
+                // 1. Tüm medyaları yeni şifreyle güncelle
+                const txM = db.transaction("media", "readwrite");
+                for (let f of files) {
+                    const encryptedData = await encryptData(f.data, v);
+                    txM.objectStore("media").get(f.id).onsuccess = (evt) => {
+                        const dObj = evt.target.result;
+                        dObj.data = encryptedData;
+                        txM.objectStore("media").put(dObj);
+                    };
+                }
+                
+                // 2. Tüm notları yeni şifreyle güncelle
+                const txN = db.transaction("notes", "readwrite");
+                for (let n of notes) {
+                    const encryptedTitle = await encryptData(n.title, v);
+                    const encryptedContent = await encryptData(n.content, v);
+                    txN.objectStore("notes").get(n.id).onsuccess = (evt) => {
+                        const nObj = evt.target.result;
+                        nObj.title = encryptedTitle;
+                        nObj.content = encryptedContent;
+                        txN.objectStore("notes").put(nObj);
+                    };
+                }
+                
+                localStorage.setItem('bbp_pass', hashed);
+                masterPassword = v;
+                sessionStorage.setItem('bbp_mp', v);
+                alert('Tüm veritabanı yeni AES-256 anahtarınızla başarıyla yeniden şifrelendi!');
+                loadAllData();
+            } catch (err) {
+                alert('Yeniden şifreleme başarısız: ' + err.message);
+            }
+        } else {
+            localStorage.setItem('bbp_panic', hashed);
+            alert('Panik kodu güncellendi.');
+        }
     };
 
     const nukeSystem = () => {
-        if (prompt("Tüm verileri silmek için 'SIL' yazın:") === 'SIL') {
+        if (prompt("Tüm verileri silmek ve sıfırlamak için 'SIL' yazın:") === 'SIL') {
             indexedDB.deleteDatabase("BBP_VAULT_FINAL");
             localStorage.clear(); sessionStorage.clear();
             location.reload();
         }
     };
 
+    // ── GÜVENLİ ŞİFRELİ VERİ YEDEĞİ (EXPORT/IMPORT) ───────
     const exportData = () => {
-        const payload = JSON.stringify({ media:files, notes:notes, exported:new Date().toISOString() });
-        const a = document.createElement('a');
-        a.href = 'data:text/json;charset=utf-8,' + encodeURIComponent(payload);
-        a.download = 'vault_backup_' + new Date().toISOString().slice(0,10) + '.json';
-        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        // Ham şifreli IndexedDB verisini doğrudan dışa aktarır, böylece yedek dosyası çalınsa bile çözülemez!
+        const txM = db.transaction("media","readonly");
+        txM.objectStore("media").getAll().onsuccess = (e) => {
+            const rawFiles = e.target.result || [];
+            const txN = db.transaction("notes","readonly");
+            txN.objectStore("notes").getAll().onsuccess = (ev) => {
+                const rawNotes = ev.target.result || [];
+                const payload = JSON.stringify({ media:rawFiles, notes:rawNotes, exported:new Date().toISOString(), secure: true });
+                const a = document.createElement('a');
+                a.href = 'data:text/json;charset=utf-8,' + encodeURIComponent(payload);
+                a.download = 'vault_aes_secured_backup_' + new Date().toISOString().slice(0,10) + '.json';
+                document.body.appendChild(a); a.click(); document.body.removeChild(a);
+            };
+        };
     };
 
     const importData = (e) => {
@@ -1130,18 +1304,21 @@
                 const d = JSON.parse(ev.target.result);
                 const media = d.media || [];
                 const nts   = d.notes || [];
+                
                 const txM = db.transaction("media","readwrite");
                 media.forEach(f => { const o={...f}; delete o.id; txM.objectStore("media").add(o); });
+                
                 txM.oncomplete = () => {
                     if (nts.length) {
                         const txN = db.transaction("notes","readwrite");
                         nts.forEach(n => { const o={...n}; delete o.id; txN.objectStore("notes").add(o); });
-                        txN.oncomplete = () => loadAllData();
-                    } else loadAllData();
+                        txN.oncomplete = () => { alert('Kriptolu yedek başarıyla içeri aktarıldı.'); loadAllData(); };
+                    } else {
+                        alert('Kriptolu yedek başarıyla içeri aktarıldı.'); loadAllData();
+                    }
                 };
-                alert(media.length + ' medya, ' + nts.length + ' not içe aktarıldı.');
             } catch(err) {
-                alert('Yedek okunamadı: ' + err.message);
+                alert('Yedek okunamadı veya biçim geçersiz: ' + err.message);
             }
         };
         r.readAsText(file);
@@ -1153,7 +1330,6 @@
         else document.getElementById('fileInp').click();
     };
 
-    // Backdrop tıklama → modal kapat
     document.addEventListener('click', (e) => {
         ['editInfoModal','infoModal','settings'].forEach(id => {
             const el = document.getElementById(id);
@@ -1162,7 +1338,6 @@
         });
     });
 
-    // Escape tuşu
     document.addEventListener('keydown', (e) => {
         if (e.key !== 'Escape') return;
         if (!document.getElementById('viewer').classList.contains('hidden'))     { closeViewer();     return; }
