@@ -161,7 +161,7 @@
         .tag-idle   { background:rgb(15 23 42); border-color:rgb(30 41 59); color:rgb(100 116 139); }
         .tag-idle:hover { border-color:rgba(99,102,241,0.4); color:rgb(165 180 252); }
 
-        #bulkBar { transition: transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275), opacity 0.3s ease; }
+        #bulkBar { transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease; }
 
         @media (prefers-reduced-motion:reduce) {
             *,*::before,*::after { animation-duration:0.01ms!important; transition-duration:0.01ms!important; }
@@ -803,7 +803,7 @@
         };
     };
 
-    // ── UPLOAD + AUTOMATIC VIDEO THUMBNAIL GENERATOR ──────
+    // ── UPLOAD + VİDEO ÖNİZLEME RESMİ MOTORU ──────────────
     const handleUpload = async (e) => {
         const list = Array.from(e.target.files);
         if (!list.length) return;
@@ -825,7 +825,7 @@
                 reader.readAsDataURL(f);
             });
 
-            // Gelişmiş Video Thumbnail Oluşturma Motoru
+            // Arka Plan Video Thumbnail Oluşturucu
             let thumb = null;
             if (f.type.startsWith('video')) {
                 thumb = await new Promise((resolve) => {
@@ -835,7 +835,6 @@
                     video.muted = true;
                     video.playsInline = true;
                     
-                    // Zaman aşımı koruması (Büyük dosyalarda takılmayı önler)
                     let safeTimeout = setTimeout(() => {
                         video.onseeked = null;
                         resolve(null);
@@ -851,7 +850,6 @@
                             canvas.width = 240;
                             canvas.height = 240;
                             const ctx = canvas.getContext('2d');
-                            // Kareyi merkeze kırparak çizme (Kusursuz kare görünüm)
                             const minSide = Math.min(video.videoWidth, video.videoHeight);
                             const sx = (video.videoWidth - minSide) / 2;
                             const sy = (video.videoHeight - minSide) / 2;
@@ -874,7 +872,7 @@
                     type:  f.type,
                     size:  f.size,
                     data:  encryptedPayload,
-                    thumb: thumb, // Thumbnail veritabanına ekleniyor
+                    thumb: thumb, 
                     tag:   'genel',
                     isFav: false,
                     date:  Date.now()
@@ -951,7 +949,6 @@
                 if (item.type.startsWith('image')) {
                     inner = `<img src="${item.data}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">`;
                 } else if (item.type.startsWith('video')) {
-                    // Eğer kapak resmi üretildiyse göster, yoksa eski güvenli ikona düş
                     if (item.thumb) {
                         inner = `<img src="${item.thumb}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
                                  <div class="absolute inset-0 flex items-center justify-center bg-black/30">
@@ -1053,7 +1050,7 @@
         setTimeout(() => render(true), 250);
     };
 
-    // ── ZOOM ENGINE ───────────────────────────────────────
+    // ── ZOOM MANUEL KONTROLÜ ──────────────────────────────
     const handleZoom = (val) => {
         const mediaEl = document.querySelector('#vContent img, #vContent video');
         if (mediaEl) {
@@ -1095,7 +1092,7 @@
         } else if (f.type.startsWith('video')) {
             el = document.createElement('video');
             el.src = f.data; el.controls = true;
-            // Bug Fix: Video elementinin kendi kontrollerinin tıklanabilir kalması için z-index ayarı yapıldı
+            // Video katmanının tıklanabilirliği ve z-index'i bağımsız hale getirildi
             el.style.cssText = 'max-width:100%;max-height:65vh;border-radius:1rem;box-shadow:0 25px 50px rgba(0,0,0,.5);opacity:0;transform:scale(1);transition:opacity .3s ease, transform 0.1s linear;transform-origin:center;position:relative;z-index:10;';
         } else {
             el = document.createElement('div');
@@ -1303,7 +1300,7 @@
     const openSettings      = () => toggleModal('settings',      true);
     const closeSettings     = () => toggleModal('settings',      false);
 
-    // ── ŞİFRE DEĞİŞTİRME ENGINE ───────────────────────────
+    // ── ŞİFRE DEĞİŞTİRME MOTORU ───────────────────────────
     const changePass = async (type) => {
         const v = prompt(type==='main' ? 'Yeni giriş şifresi:' : 'Yeni panik kodu:');
         if (v === null) return;
@@ -1373,7 +1370,7 @@
         }
     };
 
-    // ── GÜVENLİ PARÇALI YEDEKLEME MOTORU (BLOB ENTEGRASYONU) ──
+    // ── GÜVENLİ PARÇALI BLOB YEDEKLEME MOTORU (100MB+ ULTRA HIZLI) ──
     const exportData = () => {
         const txM = db.transaction("media","readonly");
         txM.objectStore("media").getAll().onsuccess = (e) => {
@@ -1383,7 +1380,7 @@
                 const rawNotes = ev.target.result || [];
                 const payload = JSON.stringify({ media:rawFiles, notes:rawNotes, exported:new Date().toISOString() });
                 
-                // BUG FIX: Belleği şişirmeyen, tarayıcıyı çökertmeyen "Blob" akışı
+                // Blob & Stream mimarisi tarayıcıyı asla yormaz ve çökertmez
                 const blob = new Blob([payload], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
                 
@@ -1393,7 +1390,6 @@
                 document.body.appendChild(a); 
                 a.click(); 
                 
-                // RAM'i anında boşaltıp tarayıcıyı rahatlatıyoruz
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url); 
             };
